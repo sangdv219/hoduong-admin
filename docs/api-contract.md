@@ -83,7 +83,7 @@ Response
 
 # Create Person
 
-POST /persons
+POST /user-admin
 
 Request
 
@@ -109,7 +109,7 @@ Response
 
 # Get Person
 
-GET /persons/{id}
+GET /user-admin/{id}
 
 Response
 
@@ -132,7 +132,7 @@ Response
 
 # Update Person
 
-PATCH /persons/{id}
+PATCH /user-admin/{id}
 
 Request
 
@@ -154,7 +154,7 @@ Response
 
 # Search Person
 
-GET /persons?q=duong&page=1&limit=20
+GET /user-admin?q=duong&page=1&limit=20
 
 Response
 
@@ -299,7 +299,7 @@ Response
 ]
 }
 ],
-"totalRecords": 1
+"totalRecord": 1
 }
 
 # Get Node Detail

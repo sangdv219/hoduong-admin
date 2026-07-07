@@ -3,6 +3,7 @@
 import { Layout } from "antd";
 import { CONTENT_BG } from "@/constants/colors";
 import { useDashboardNavigation } from "@/hooks/use-dashboard-navigation";
+import { QueryProvider } from "@/components/providers/query-provider";
 import { DashboardTheme } from "./dashboard-theme";
 import { GlobalStyles } from "./global-styles";
 import { Sidebar } from "./sidebar";
@@ -15,7 +16,8 @@ export default function DashboardShell() {
   const nav = useDashboardNavigation();
 
   return (
-    <DashboardTheme>
+    <QueryProvider>
+      <DashboardTheme>
       <Layout style={{ minHeight: "100vh", fontFamily: "inherit" }}>
         <Sidebar
           collapsed={nav.collapsed}
@@ -50,6 +52,7 @@ export default function DashboardShell() {
         </Layout>
       </Layout>
       <GlobalStyles />
-    </DashboardTheme>
+      </DashboardTheme>
+    </QueryProvider>
   );
 }

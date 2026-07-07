@@ -1,14 +1,35 @@
 "use client";
 
-import {
-  BellOutlined,
-  DashboardOutlined,
-  FireOutlined,
-  SettingOutlined,
-  ShoppingOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
 import type { MenuProps } from "antd";
+import {
+  DashboardOutlined,
+  ShoppingOutlined,
+  ThunderboltOutlined,
+  FileProtectOutlined,
+  CalendarOutlined,
+  UserOutlined,
+  ExperimentOutlined,
+  InboxOutlined,
+  AccountBookOutlined,
+  TrophyOutlined,
+  BarChartOutlined,
+  AuditOutlined,
+  SettingOutlined,
+  CalculatorOutlined,
+  QrcodeOutlined,
+  LinkOutlined,
+  TagsOutlined,
+  AppstoreOutlined,
+  FireOutlined,
+  UnorderedListOutlined,
+  FileTextOutlined,
+  MenuFoldOutlined,
+  BankOutlined,
+  TeamOutlined,
+  SlidersOutlined,
+  BellOutlined,
+  BranchesOutlined,
+} from "@ant-design/icons";
 
 type MenuItem = Required<MenuProps>["items"][number];
 
@@ -25,24 +46,87 @@ export const siderMenuItems: MenuItem[] = [
       {
         key: "mat-hang",
         icon: <ShoppingOutlined />,
-        label: "Mặt Hàng",
+        label: "Gia phả",
         children: [
           {
             key: "pha-do",
             label: "Phả đồ",
-            icon: <FireOutlined />,
+            icon: <BranchesOutlined />,
           },
           {
             key: "nguoi-dung",
             label: "Người dùng",
-            icon: <UserOutlined />,
-          },
-          {
-            key: "vai-tro",
-            label: "Vai trò",
-            icon: <UserOutlined />,
+            icon: <TeamOutlined />,
           },
         ],
+      },
+      {
+        key: "hoa-don-dien-tu",
+        icon: <FileProtectOutlined />,
+        label: "Hoá Đơn Điện Tử",
+      },
+      {
+        key: "dat-ban",
+        icon: <CalendarOutlined />,
+        label: "Đặt Bàn",
+        children: [
+          {
+            key: "cau-hinh-dat-ban",
+            label: "Cấu Hình Đặt Bàn",
+            icon: <SettingOutlined />,
+          },
+          {
+            key: "qr-theo-ban",
+            label: "QR Theo Bàn",
+            icon: <QrcodeOutlined />,
+          },
+        ],
+      },
+    ],
+  },
+  {
+    type: "group",
+    label: "QUẢN LÝ",
+    children: [
+      { key: "khach-hang", icon: <UserOutlined />, label: "Khách Hàng" },
+      {
+        key: "ban-thanh-pham",
+        icon: <ExperimentOutlined />,
+        label: "Bán Thành Phẩm",
+      },
+      {
+        key: "kho-hang",
+        icon: <InboxOutlined />,
+        label: "Kho Hàng",
+        children: [
+          {
+            key: "nha-cung-cap",
+            label: "Nhà Cung Cấp",
+            icon: <BankOutlined />,
+          },
+        ],
+      },
+      { key: "tai-chinh", icon: <AccountBookOutlined />, label: "Tài Chính" },
+      {
+        key: "loyalty",
+        icon: <TrophyOutlined />,
+        label: "Loyalty",
+        children: [
+          {
+            key: "khach-hang-thanh-vien",
+            label: "Khách Hàng Thành Viên",
+            icon: <TeamOutlined />,
+          },
+        ],
+      },
+      { key: "bao-cao", icon: <BarChartOutlined />, label: "Báo Cáo" },
+      { key: "ke-khai-thue", icon: <AuditOutlined />, label: "Kê Khai Thuế" },
+      { key: "quan-tri", icon: <SettingOutlined />, label: "Quản Trị" },
+      { key: "tinh-luong", icon: <CalculatorOutlined />, label: "Tính Lương" },
+      {
+        key: "cau-hinh-he-thong",
+        icon: <SlidersOutlined />,
+        label: "Cấu Hình Hệ Thống",
       },
     ],
   },

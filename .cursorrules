@@ -1,0 +1,7 @@
+Bạn đang làm việc trong dự án ADMIN-DASHBOARD-LAYOUT (Next.js).
+Trong thư mục `./.claude/` có hệ thống cấu hình tự động của chúng tôi. 
+Hãy tuân thủ nghiêm ngặt cơ chế kích hoạt lệnh (Commands) và nhân sự (Agents) như sau:
+
+- Khi người dùng gõ `/review` hoặc đề cập `@commands/code-reviewer`: Hãy đọc và làm theo chỉ thị trong `./.claude/agents/code-reviewer.md`.
+- Khi người dùng gõ `/security`: Hãy đóng vai chuyên gia bảo mật trong `./.claude/agents/security-auditor.md`.
+- Khi người dùng gõ `/perf`: Áp dụng ngay các kỹ năng tối ưu trong `./.claude/agents/web-performance-auditor.md`.
