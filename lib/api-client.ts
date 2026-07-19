@@ -1,5 +1,9 @@
 import { API_BASE_URL } from "@/constants/api";
-import { ApiError, resolveApiErrorMessage, type ApiErrorBody } from "@/lib/api-errors";
+import {
+  ApiError,
+  resolveApiErrorMessage,
+  type ApiErrorBody,
+} from "@/lib/api-errors";
 import { useAuthStore } from "@/stores/use-auth-store";
 
 interface RequestOptions extends Omit<RequestInit, "body"> {
@@ -7,7 +11,10 @@ interface RequestOptions extends Omit<RequestInit, "body"> {
   auth?: boolean;
 }
 
-export async function apiClient<T>(path: string, options: RequestOptions = {}): Promise<T> {
+export async function apiClient<T>(
+  path: string,
+  options: RequestOptions = {},
+): Promise<T> {
   const { body, auth = true, headers: customHeaders, ...rest } = options;
 
   const headers = new Headers(customHeaders);
@@ -21,7 +28,6 @@ export async function apiClient<T>(path: string, options: RequestOptions = {}): 
       headers.set("Authorization", `Bearer ${token}`);
     }
   }
-
   const response = await fetch(`${API_BASE_URL}${path}`, {
     ...rest,
     headers,
@@ -38,8 +44,11 @@ export async function apiClient<T>(path: string, options: RequestOptions = {}): 
 
     throw new ApiError(
       response.status,
-      resolveApiErrorMessage(errorBody, `Yêu cầu thất bại (${response.status})`),
-      errorBody.errorCode
+      resolveApiErrorMessage(
+        errorBody,
+        `Yêu cầu thất bại (${response.status})`,
+      ),
+      errorBody.errorCode,
     );
   }
 

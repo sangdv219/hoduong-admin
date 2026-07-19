@@ -4,22 +4,29 @@ interface PersonFilterState {
   search: string;
   page: number;
   limit: number;
-  isActive?: boolean;
+  is_active?: boolean;
   setSearch: (search: string) => void;
   setPage: (page: number) => void;
-  setIsActive: (isActive?: boolean) => void;
+  setIsActive: (is_active?: boolean) => void;
   reset: () => void;
 }
 
-const DEFAULT_LIMIT = 20;
+const DEFAULT_LIMIT = 15;
+const DEFAULT_IS_ACTIVE = false;
 
 export const usePersonFilterStore = create<PersonFilterState>((set) => ({
   search: "",
   page: 1,
   limit: DEFAULT_LIMIT,
-  isActive: undefined,
+  is_active: DEFAULT_IS_ACTIVE,
   setSearch: (search) => set({ search, page: 1 }),
   setPage: (page) => set({ page }),
-  setIsActive: (isActive) => set({ isActive, page: 1 }),
-  reset: () => set({ search: "", page: 1, limit: DEFAULT_LIMIT, isActive: undefined }),
+  setIsActive: (is_active) => set({ is_active, page: 1 }),
+  reset: () =>
+    set({
+      search: "",
+      page: 1,
+      limit: DEFAULT_LIMIT,
+      is_active: DEFAULT_IS_ACTIVE,
+    }),
 }));

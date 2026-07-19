@@ -88,22 +88,19 @@ POST /user-admin
 Request
 
 {
-"familyId": "family-uuid-1111",
-"firstName": "Nguyen",
-"lastName": "Duong",
+"fullname": "Nguyen",
+"other_name": "",
 "gender": "MALE",
-"birthDate": "1999-10-30"
+"birth_date": "1999-10-30"
 }
 
 Response
 
 {
 "id": "u3333333-3333-3333-3333-333333333333",
-"familyId": "family-uuid-1111",
-"firstName": "Nguyen",
-"lastName": "Duong",
+"fullname": "Nguyen",
 "gender": "MALE",
-"birthDate": "1999-10-30",
+"birth_date": "1999-10-30",
 "createdAt": "2026-06-20T09:35:00.000Z"
 }
 
@@ -115,19 +112,17 @@ Response
 
 {
 "id": "u3333333-3333-3333-3333-333333333333",
-"familyId": "family-uuid-1111",
-"firstName": "Nguyen",
-"lastName": "Duong",
+"fullname": "Nguyen",
 "gender": "MALE",
-"birthDate": "1999-10-30",
-"otherName": "Duong Nguyen",
-"yearOfDeath": null,
-"burialPlace": null,
+"birth_date": "1999-10-30",
+"other_name": "Duong Nguyen",
+"birth_date": null,
+"burial_place": null,
 "address": "Ha Noi",
 "biography": null,
 "status": "ALIVE",
 "email": "duong@example.com",
-"isActive": true
+"is_active": true
 }
 
 # Update Person
@@ -137,7 +132,7 @@ PATCH /user-admin/{id}
 Request
 
 {
-"firstName": "Nguyen Minh",
+"fullname": "Nguyen Minh",
 "lastName": "Duong",
 "address": "TP. Ho Chi Minh"
 }
@@ -146,7 +141,7 @@ Response
 
 {
 "id": "u3333333-3333-3333-3333-333333333333",
-"firstName": "Nguyen Minh",
+"fullname": "Nguyen Minh",
 "lastName": "Duong",
 "address": "TP. Ho Chi Minh",
 "updatedAt": "2026-06-20T09:40:00.000Z"
@@ -164,7 +159,7 @@ Response
 "id": "u3333333-3333-3333-3333-333333333333",
 "fullName": "Nguyen Minh Duong",
 "gender": "MALE",
-"birthDate": "1999-10-30",
+"birth_date": "1999-10-30",
 "familyId": "family-uuid-1111"
 }
 ],
@@ -187,21 +182,21 @@ Response
 "createdBy": "Admin",
 "updatedAt": "2026-06-20T09:40:00.000Z",
 "updatedBy": null,
-"isActive": true,
+"is_active": true,
 "members": 2,
 "user": {
 "id": "u1111111-1111-1111-1111-111111111111",
 "fullname": "Nguyễn Văn Tổ",
-"otherName": "Cụ Tổ",
+"other_name": "Cụ Tổ",
 "gender": "MALE",
 "yearOfBirth": 1900,
-"yearOfDeath": 1980,
-"burialPlace": "Nghĩa trang Quê Nhà",
+"birth_date": 1980,
+"burial_place": "Nghĩa trang Quê Nhà",
 "address": "Hà Nội, Việt Nam",
 "biography": "Người sáng lập dòng họ Nguyễn Văn.",
 "status": "DECEASED",
 "email": "cuto@nguyen.org",
-"isActive": true,
+"is_active": true,
 "createdAt": "2026-06-20T09:00:00.000Z",
 "updatedBy": "Admin"
 },
@@ -214,21 +209,21 @@ Response
 "createdBy": "Admin",
 "updatedAt": "2026-06-20T09:45:00.000Z",
 "updatedBy": null,
-"isActive": true,
+"is_active": true,
 "members": 1,
 "user": {
 "id": "u2222222-2222-2222-2222-222222222222",
 "fullname": "Nguyễn Văn Cả",
-"otherName": "Bác Cả",
+"other_name": "Bác Cả",
 "gender": "MALE",
 "yearOfBirth": 1930,
-"yearOfDeath": 2010,
-"burialPlace": "Nghĩa trang Quê Nhà",
+"birth_date": 2010,
+"burial_place": "Nghĩa trang Quê Nhà",
 "address": "Hà Nội, Việt Nam",
 "biography": "Trưởng nam đời thứ hai.",
 "status": "DECEASED",
 "email": "bacca@nguyen.org",
-"isActive": true,
+"is_active": true,
 "createdAt": "2026-06-20T09:10:00.000Z",
 "updatedBy": "Admin"
 },
@@ -274,26 +269,26 @@ Response
 "createdBy": "Admin",
 "updatedAt": "2026-06-20T09:40:00.000Z",
 "updatedBy": null,
-"isActive": true,
+"is_active": true,
 "members": 2,
 "parent": null,
 "user": {
 "id": "u1111111-1111-1111-1111-111111111111",
 "fullname": "Nguyễn Văn Tổ",
-"isActive": true
+"is_active": true
 },
 "couples": [
 {
 "id": "cp999999-9999-9999-9999-999999999999",
 "level": 1,
 "userId": "spouse-uuid-here",
-"isActive": true,
+"is_active": true,
 "nodeId": "e2c349a0-128b-4c07-9bb3-50012bc0ae31",
 "user": {
 "id": "spouse-uuid-here",
 "fullname": "Trần Thị Tổ",
 "gender": "FEMALE",
-"isActive": true
+"is_active": true
 }
 }
 ]
@@ -315,26 +310,26 @@ Response
 "createdAt": "2026-06-20T09:40:00.000Z",
 "createdBy": "Admin",
 "updatedAt": "2026-06-20T09:40:00.000Z",
-"isActive": true,
+"is_active": true,
 "members": 1,
 "user": {
 "id": "u1111111-1111-1111-1111-111111111111",
 "fullname": "Nguyễn Văn Tổ",
 "gender": "MALE",
-"isActive": true
+"is_active": true
 },
 "couples": [
 {
 "id": "couple-uuid-1234",
 "level": 1,
 "userId": "spouse-uuid-here",
-"isActive": true,
+"is_active": true,
 "nodeId": "e2c349a0-128b-4c07-9bb3-50012bc0ae31",
 "user": {
 "id": "spouse-uuid-here",
 "fullname": "Trần Thị Tổ",
 "gender": "FEMALE",
-"isActive": true
+"is_active": true
 }
 }
 ]
@@ -351,7 +346,7 @@ Request
 "parentId": "e2c349a0-128b-4c07-9bb3-50012bc0ae31",
 "coupleUserId": "u5555555-5555-5555-5555-555555555555",
 "members": 2,
-"isActive": true
+"is_active": true
 }
 
 Update Node
@@ -365,7 +360,7 @@ Request
 "userId": "u1111111-1111-1111-1111-111111111111",
 "parentId": "parent-node-uuid-if-change",
 "members": 3,
-"isActive": true
+"is_active": true
 }
 
 Response

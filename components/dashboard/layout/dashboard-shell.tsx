@@ -18,40 +18,43 @@ export default function DashboardShell() {
   return (
     <QueryProvider>
       <DashboardTheme>
-      <Layout style={{ minHeight: "100vh", fontFamily: "inherit" }}>
-        <Sidebar
-          collapsed={nav.collapsed}
-          onCollapsedChange={nav.setCollapsed}
-          openKeys={nav.openKeys}
-          onOpenKeysChange={nav.setOpenKeys}
-          currentView={nav.currentView}
-          onMenuSelect={nav.handleMenuSelect}
-        />
+        <Layout style={{ minHeight: "100vh", fontFamily: "inherit" }}>
+          <Sidebar
+            collapsed={nav.collapsed}
+            onCollapsedChange={nav.setCollapsed}
+            openKeys={nav.openKeys}
+            onOpenKeysChange={nav.setOpenKeys}
+            currentView={nav.currentView}
+            onMenuSelect={nav.handleMenuSelect}
+          />
 
-        <Layout
-          style={{
-            marginLeft: nav.siderWidth,
-            transition: "margin-left 0.2s",
-            minHeight: "100vh",
-          }}
-        >
-          <DashboardHeader meta={nav.meta} />
-
-          <Content
-            style={{ background: CONTENT_BG, minHeight: "calc(100vh - 52px)" }}
+          <Layout
+            style={{
+              marginLeft: nav.siderWidth,
+              transition: "margin-left 0.2s",
+              minHeight: "100vh",
+            }}
           >
-            <ViewRouter
-              currentView={nav.currentView}
-              activeTab={nav.activeTab}
-              setActiveTab={nav.setActiveTab}
-              systemSubView={nav.systemSubView}
-              setSystemSubView={nav.setSystemSubView}
-              onNavigateHome={() => nav.setCurrentView("cau-hinh-dat-ban")}
-            />
-          </Content>
+            <DashboardHeader meta={nav.meta} />
+
+            <Content
+              style={{
+                background: CONTENT_BG,
+                minHeight: "calc(100vh - 52px)",
+              }}
+            >
+              <ViewRouter
+                currentView={nav.currentView}
+                activeTab={nav.activeTab}
+                setActiveTab={nav.setActiveTab}
+                systemSubView={nav.systemSubView}
+                setSystemSubView={nav.setSystemSubView}
+                onNavigateHome={() => nav.setCurrentView("nguoi-dung")}
+              />
+            </Content>
+          </Layout>
         </Layout>
-      </Layout>
-      <GlobalStyles />
+        <GlobalStyles />
       </DashboardTheme>
     </QueryProvider>
   );

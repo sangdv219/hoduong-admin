@@ -1,35 +1,27 @@
 "use client";
 
-import type { MenuProps } from "antd";
 import {
-  DashboardOutlined,
-  ShoppingOutlined,
-  ThunderboltOutlined,
-  FileProtectOutlined,
-  CalendarOutlined,
-  UserOutlined,
-  ExperimentOutlined,
-  InboxOutlined,
   AccountBookOutlined,
-  TrophyOutlined,
-  BarChartOutlined,
   AuditOutlined,
-  SettingOutlined,
-  CalculatorOutlined,
-  QrcodeOutlined,
-  LinkOutlined,
-  TagsOutlined,
-  AppstoreOutlined,
-  FireOutlined,
-  UnorderedListOutlined,
-  FileTextOutlined,
-  MenuFoldOutlined,
   BankOutlined,
-  TeamOutlined,
-  SlidersOutlined,
+  BarChartOutlined,
   BellOutlined,
   BranchesOutlined,
+  CalculatorOutlined,
+  CalendarOutlined,
+  DashboardOutlined,
+  ExperimentOutlined,
+  FileProtectOutlined,
+  InboxOutlined,
+  QrcodeOutlined,
+  SettingOutlined,
+  ShoppingOutlined,
+  SlidersOutlined,
+  TeamOutlined,
+  TrophyOutlined,
+  UserOutlined,
 } from "@ant-design/icons";
+import type { MenuProps } from "antd";
 
 type MenuItem = Required<MenuProps>["items"][number];
 

@@ -28,7 +28,7 @@ describe("personService", () => {
       firstName: "Nguyen",
       lastName: "Duong",
       gender: "MALE" as const,
-      birthDate: "1999-10-30",
+      birth_date: "1999-10-30",
     };
     vi.mocked(apiClient).mockResolvedValue({ id: "p1", ...payload });
 
@@ -40,14 +40,14 @@ describe("personService", () => {
     });
   });
 
-  it("deactivate soft-deletes via isActive false", async () => {
-    vi.mocked(apiClient).mockResolvedValue({ id: "p1", isActive: false });
+  it("deactivate soft-deletes via is_active false", async () => {
+    vi.mocked(apiClient).mockResolvedValue({ id: "p1", is_active: false });
 
     await personService.deactivate("p1");
 
     expect(apiClient).toHaveBeenCalledWith("/user-admin/p1", {
       method: "PATCH",
-      body: { isActive: false },
+      body: { is_active: false },
     });
   });
 });

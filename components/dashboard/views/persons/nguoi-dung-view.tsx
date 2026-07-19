@@ -1,7 +1,15 @@
 "use client";
 
-import { useMemo, useState } from "react";
-import { Button, Input, Select, Table, TableColumnsType, Tooltip } from "antd";
+import { useEffect, useMemo, useState } from "react";
+import {
+  Button,
+  Form,
+  Input,
+  Select,
+  Table,
+  TableColumnsType,
+  Tooltip,
+} from "antd";
 import {
   PlusOutlined,
   ReloadOutlined,
@@ -182,8 +190,12 @@ export function NguoiDungView() {
               fontSize: 13,
             }}
           >
-            Không thể tải danh sách người dùng. Kiểm tra kết nối API tại{" "}
-            <code>/api/v1/user-admin</code>.
+            {error instanceof Error
+              ? `Không thể tải danh sách người dùng: ${error.message}`
+              : "Đã có lỗi xảy ra khi tải danh sách người dùng. Vui lòng thử lại sau."}
+            <Button type="primary" onClick={() => refetch()}>
+              Thử lại
+            </Button>
           </div>
         )}
 
@@ -203,7 +215,7 @@ export function NguoiDungView() {
             columns={
               columns as unknown as TableColumnsType<PersonSearchRecordDTO>
             }
-            dataSource={data?.records?.data ?? ([] as PersonSearchRecordDTO[])}
+            dataSource={data?.records?.items ?? ([] as PersonSearchRecordDTO[])}
             loading={isLoading}
             pagination={{
               current: page,
@@ -228,7 +240,6 @@ export function NguoiDungView() {
           />
         </div>
       </div>
-
       <PersonFormModal
         open={modalOpen}
         personId={editingId}

@@ -42,7 +42,14 @@ export function KhachHangThanhVienView() {
         }
       />
 
-      <div style={{ padding: "20px 24px", display: "flex", flexDirection: "column", gap: 16 }}>
+      <div
+        style={{
+          padding: "20px 24px",
+          display: "flex",
+          flexDirection: "column",
+          gap: 16,
+        }}
+      >
         <div
           style={{
             background: SURFACE_BG,
@@ -141,14 +148,18 @@ export function KhachHangThanhVienView() {
               pageSize: 13,
               showSizeChanger: false,
               showTotal: (total) => (
-                <span style={{ fontSize: 12, color: "#6b7280" }}>Tổng {total} khách hàng</span>
+                <span style={{ fontSize: 12, color: "#6b7280" }}>
+                  Tổng {total} khách hàng
+                </span>
               ),
               style: { padding: "10px 16px", margin: 0 },
             }}
             size="small"
             rowKey="key"
             style={{ fontSize: 13 }}
-            rowClassName={(_, index) => (index % 2 === 0 ? "row-even" : "row-odd")}
+            rowClassName={(_, index) =>
+              index % 2 === 0 ? "row-even" : "row-odd"
+            }
           />
         </div>
       </div>

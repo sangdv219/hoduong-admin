@@ -12,19 +12,13 @@ import {
   Spin,
 } from "antd";
 import dayjs from "dayjs";
-import { DEFAULT_FAMILY_ID } from "@/constants/api";
 import {
   useCreatePerson,
   usePersonDetail,
   useUpdatePerson,
 } from "@/hooks/use-persons";
 import { personToFormValues } from "@/utils/person";
-import type {
-  CreatePersonDTO,
-  PersonFormValues,
-  UpdatePersonDTO,
-} from "@/types/person";
-import { InfoCircleOutlined } from "@ant-design/icons";
+import type { CreatePersonDTO, UpdatePersonDTO } from "@/types/person";
 
 interface PersonFormModalProps {
   open: boolean;
@@ -38,8 +32,8 @@ const GENDER_OPTIONS = [
 ];
 
 const STATUS_OPTIONS = [
-  { value: "ALIVE", label: "Còn sống" },
-  { value: "DECEASED", label: "Đã mất" },
+  { value: 1, label: "Còn sống" },
+  { value: 0, label: "Đã mất" },
 ];
 
 export function PersonFormModal({
@@ -47,7 +41,7 @@ export function PersonFormModal({
   personId,
   onClose,
 }: PersonFormModalProps) {
-  const [form] = Form.useForm<PersonFormValues>();
+  const [form] = Form.useForm();
   const isEdit = !!personId;
 
   const { data: person, isLoading: loadingDetail } = usePersonDetail(
@@ -58,64 +52,82 @@ export function PersonFormModal({
 
   const submitting = createMutation.isPending || updateMutation.isPending;
 
+  // CHỈ THỰC THI KHI MODAL ĐƯỢC MỞ
   useEffect(() => {
-    if (!open) {
-      form.resetFields();
-      return;
-    }
+    if (!open) return; // Nếu đóng thì không làm gì cả, tránh gọi form instance lỗi
+
+    // Xóa dữ liệu cũ của lần bật trước đó để tránh lag data
+    form.resetFields();
 
     if (isEdit && person) {
       const values = personToFormValues(person);
       form.setFieldsValue({
         ...values,
-        birthDate: values.birthDate,
+        birth_date: values.birth_date ? dayjs(values.birth_date) : null,
       });
     } else if (!isEdit) {
       form.setFieldsValue({
-        // familyId: DEFAULT_FAMILY_ID,
+        email: "abc@gmail.com",
+        password: "1234567",
+        other_name: "sang duong",
         gender: "Nam",
-        status: "Còn sống",
-        isActive: true,
+        phone: "0919528956",
+        address: "aasp 14",
+        status: 1,
+        is_active: false,
       });
     }
   }, [open, isEdit, person, form]);
 
   async function handleSubmit() {
-    const values = await form.validateFields();
-    const birthDate =
-      typeof values.birthDate === "string"
-        ? values.birthDate
-        : dayjs(values.birthDate as unknown as string).format("YYYY-MM-DD");
+    try {
+      const values = await form.validateFields();
 
-    if (isEdit && personId) {
-      const payload: UpdatePersonDTO = {
-        firstName: values.firstName,
-        lastName: values.lastName,
-        gender: values.gender,
-        birthDate,
-        otherName: values.otherName || null,
-        yearOfDeath: values.yearOfDeath ?? null,
-        burialPlace: values.burialPlace || null,
-        address: values.address || null,
-        biography: values.biography || null,
-        status: values.status,
-        email: values.email || null,
-        isActive: values.isActive,
-      };
-      await updateMutation.mutateAsync({ id: personId, payload });
-    } else {
-      const payload: CreatePersonDTO = {
-        familyId: values.familyId,
-        firstName: values.firstName,
-        lastName: values.lastName,
-        gender: values.gender,
-        birthDate,
-        email: values.email,
-      };
-      await createMutation.mutateAsync(payload);
+      const formattedBirth = values.birth_date
+        ? dayjs(values.birth_date).format("YYYY-MM-DD")
+        : null;
+
+      if (isEdit && personId) {
+        const payload: UpdatePersonDTO = {
+          gender: values.gender,
+          other_name: values.other_name || null,
+          password: values.password,
+          phone: values.phone || null,
+          roleId: "026e2174-aff3-4461-9f43-0e16c9a88f17",
+          birth_date: formattedBirth,
+          year_of_death: values.year_of_death ?? null,
+          burial_place: values.burial_place || null,
+          address: values.address || null,
+          biography: values.biography || null,
+          status: values.status,
+          email: values.email || null,
+          is_active: values.is_active,
+        };
+        await updateMutation.mutateAsync({ id: personId, payload });
+      } else {
+        const payload: CreatePersonDTO = {
+          email: values.email,
+          fullname: values.fullname,
+          password: values.password,
+          roleId: "026e2174-aff3-4461-9f43-0e16c9a88f17",
+          other_name: values.other_name || null,
+          gender: values.gender,
+          phone: values.phone || null,
+          birth_date: formattedBirth,
+          burial_place: values.burial_place || null,
+          address: values.address || null,
+          biography: values.biography || null,
+          status: values.status || 1,
+          is_active: values.is_active,
+        };
+        console.log("payload", payload);
+        await createMutation.mutateAsync(payload);
+      }
+
+      onClose();
+    } catch (error) {
+      console.error("Submit thất bại:", error);
     }
-
-    onClose();
   }
 
   return (
@@ -127,32 +139,39 @@ export function PersonFormModal({
       okText={isEdit ? "Lưu" : "Thêm"}
       cancelText="Hủy"
       confirmLoading={submitting}
-      destroyOnHidden
+      // forceRender // <-- THÊM THUỘC TÍNH NÀY: Ép buộc render form ngầm để khởi tạo kết nối form instance
       width={640}
     >
       <Spin spinning={isEdit && loadingDetail}>
-        <Form form={form} layout="vertical" style={{ marginTop: 16 }}>
-          <Form.Item
-            name="familyId"
-            label="Mã gia tộc"
-            rules={[{ required: true, message: "Vui lòng nhập mã gia tộc" }]}
-          >
-            <Input placeholder="family-uuid-1111" disabled={isEdit} />
-          </Form.Item>
+        <Form layout="vertical" style={{ marginTop: 16 }} form={form}>
           <Form.Item
             name="email"
             label="Email"
-            rules={[{ required: true, message: "Vui lòng nhập email" }]}
+            rules={[
+              {
+                required: true,
+                type: "email",
+                message: "Vui lòng nhập đúng định dạng email",
+              },
+            ]}
           >
-            <Input
-              placeholder="duong@example.com"
-              type="email"
-              disabled={isEdit}
-            />
+            <Input placeholder="duong@example.com" disabled={isEdit} />
+          </Form.Item>
+
+          <Form.Item
+            name="password"
+            label="Mật khẩu"
+            initialValue={"abc123@45"}
+          >
+            <Input placeholder="1234567" disabled={true} />
           </Form.Item>
 
           <div
-            style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: 12,
+            }}
           >
             <Form.Item
               name="fullname"
@@ -161,17 +180,17 @@ export function PersonFormModal({
             >
               <Input placeholder="Nguyen Duong" />
             </Form.Item>
-            <Form.Item
-              name="otherName"
-              label="Tên khác"
-              rules={[{ required: false }]}
-            >
+            <Form.Item name="other_name" label="Tên khác">
               <Input placeholder="Duong Nguyen" />
             </Form.Item>
           </div>
 
           <div
-            style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr",
+              gap: 12,
+            }}
           >
             <Form.Item
               name="gender"
@@ -180,11 +199,11 @@ export function PersonFormModal({
             >
               <Select options={GENDER_OPTIONS} />
             </Form.Item>
+
             <Form.Item
               name="phone"
               label="Số điện thoại"
               rules={[
-                { required: false },
                 {
                   pattern: /^0[0-9]{9}$/,
                   message: "Số điện thoại không hợp lệ",
@@ -193,74 +212,64 @@ export function PersonFormModal({
             >
               <Input placeholder="0909090909" />
             </Form.Item>
+          </div>
 
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr 1fr",
+              gap: 12,
+            }}
+          >
             <Form.Item
-              name="birthDate"
-              label="Ngày sinh"
-              rules={[{ required: true, message: "Vui lòng chọn ngày sinh" }]}
-              getValueProps={(value) => ({
-                value: value ? dayjs(value) : undefined,
-              })}
-              normalize={(value) => (value ? value.format("YYYY-MM-DD") : "")}
+              name="birth_date"
+              label="Ngày sinh123"
+              rules={[{ required: false }]}
             >
               <DatePicker style={{ width: "100%" }} format="DD/MM/YYYY" />
             </Form.Item>
-            <Form.Item
-              name="year_of_death"
-              label="Năm mất"
-              rules={[{ required: false }]}
-            >
+
+            <Form.Item name="year_of_death" label="Năm mất">
               <InputNumber
                 style={{ width: "100%" }}
-                min={2026}
+                min={0}
                 max={2100}
                 placeholder="Năm mất"
               />
             </Form.Item>
-            <Form.Item
-              name="burial_place"
-              label="Nơi an táng"
-              rules={[{ required: false }]}
-            >
+
+            <Form.Item name="burial_place" label="Nơi an táng">
               <Input placeholder="Nghĩa trang..." />
             </Form.Item>
           </div>
-          <Form.Item
-            name="address"
-            label="Địa chỉ sống"
-            rules={[{ required: false }]}
-          >
+
+          <Form.Item name="address" label="Địa chỉ sống">
             <Input placeholder="123 Đường ABC, Quận XYZ, TP. HCM" />
           </Form.Item>
-          <Form.Item
-            name="biography"
-            label="Tiểu sử"
-            rules={[{ required: false }]}
-          >
+
+          <Form.Item name="biography" label="Tiểu sử">
             <Input.TextArea rows={3} placeholder="Thông tin tiểu sử..." />
           </Form.Item>
 
           {isEdit && (
-            <>
-              <div
-                style={{
-                  display: "grid",
-                  gridTemplateColumns: "1fr 1fr",
-                  gap: 12,
-                }}
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr 1fr",
+                gap: 12,
+              }}
+            >
+              <Form.Item name="status" label="Trạng thái">
+                <Select options={STATUS_OPTIONS} />
+              </Form.Item>
+              <Form.Item
+                name="is_active"
+                label="Kích hoạt"
+                valuePropName="checked"
               >
-                <Form.Item name="status" label="Trạng thái">
-                  <Select options={STATUS_OPTIONS} />
-                </Form.Item>
-                <Form.Item
-                  name="isActive"
-                  label="Kích hoạt"
-                  valuePropName="checked"
-                >
-                  <Switch />
-                </Form.Item>
-              </div>
-            </>
+                <Switch />
+              </Form.Item>
+            </div>
           )}
         </Form>
       </Spin>

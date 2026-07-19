@@ -8,19 +8,21 @@ import type { CreatePersonDTO, UpdatePersonDTO } from "@/types/person";
 
 function handleMutationError(error: unknown, fallback: string) {
   const msg = error instanceof ApiError ? error.message : fallback;
+
   message.error(msg);
 }
 
 export function usePersons() {
-  const { search, page, limit } = usePersonFilterStore();
+  const { search, page, limit, is_active } = usePersonFilterStore();
 
   return useQuery({
-    queryKey: PERSON_QUERY_KEYS.list({ search, page, limit }),
+    queryKey: PERSON_QUERY_KEYS.list({ search, page, limit, is_active }),
     queryFn: () =>
       personService.search({
         q: search || undefined,
         page,
         limit,
+        is_active,
       }),
     placeholderData: (prev) => prev,
   });
@@ -58,7 +60,8 @@ export function useUpdatePerson() {
       queryClient.invalidateQueries({ queryKey: PERSON_QUERY_KEYS.all });
       queryClient.invalidateQueries({ queryKey: PERSON_QUERY_KEYS.detail(id) });
     },
-    onError: (error) => handleMutationError(error, "Không thể cập nhật người dùng"),
+    onError: (error) =>
+      handleMutationError(error, "Không thể cập nhật người dùng"),
   });
 }
 
@@ -71,7 +74,8 @@ export function useDeactivatePerson() {
       message.success("Đã vô hiệu hóa người dùng");
       queryClient.invalidateQueries({ queryKey: PERSON_QUERY_KEYS.all });
     },
-    onError: (error) => handleMutationError(error, "Không thể vô hiệu hóa người dùng"),
+    onError: (error) =>
+      handleMutationError(error, "Không thể vô hiệu hóa người dùng"),
   });
 }
 
@@ -84,6 +88,7 @@ export function useActivatePerson() {
       message.success("Đã kích hoạt người dùng");
       queryClient.invalidateQueries({ queryKey: PERSON_QUERY_KEYS.all });
     },
-    onError: (error) => handleMutationError(error, "Không thể kích hoạt người dùng"),
+    onError: (error) =>
+      handleMutationError(error, "Không thể kích hoạt người dùng"),
   });
 }

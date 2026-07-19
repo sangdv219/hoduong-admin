@@ -1,83 +1,96 @@
 export type PersonGender = "Nam" | "Nữ";
 
-export type PersonStatus = "Còn sống" | "Đã mất";
+export type PersonStatus = 1 | 0;
 
 export interface PersonDTO {
   id: string;
-  familyId: string;
-  firstName: string;
-  lastName: string;
+  email: string;
+  fullname: string;
+  other_name?: string | null;
   gender: PersonGender;
-  birthDate: string;
-  otherName?: string | null;
-  yearOfDeath?: number | null;
-  burialPlace?: string | null;
+  phone?: string | null;
+  birth_date?: number | null;
+  burial_place?: string | null;
   address?: string | null;
   biography?: string | null;
   status: PersonStatus;
-  email?: string | null;
-  isActive: boolean;
+  is_active: boolean;
   createdAt?: string;
   updatedAt?: string;
 }
 
 export interface PersonSearchRecordDTO {
   records: {
-    data: PersonDTO[] | null;
+    items: PersonDTO[] | null;
     total: number;
+    page: number;
+    limit: number;
+    totalPages: number;
   };
 }
 
 export interface CreatePersonDTO {
-  familyId: string;
-  firstName: string;
-  lastName: string;
+  email?: string | null;
+  fullname?: string;
+  roleId: string;
+  password: string;
+  other_name?: string | null;
   gender: PersonGender;
-  birthDate: string;
-  email?: string;
-}
-
-export interface UpdatePersonDTO {
-  firstName?: string;
-  lastName?: string;
-  gender?: PersonGender;
-  birthDate?: string;
-  otherName?: string | null;
-  yearOfDeath?: number | null;
-  burialPlace?: string | null;
+  phone?: string | null;
+  birth_date?: string | null;
+  year_of_death?: number | null;
+  burial_place?: string | null;
   address?: string | null;
   biography?: string | null;
   status?: PersonStatus;
+  is_active: boolean;
+}
+
+export interface UpdatePersonDTO {
   email?: string | null;
-  isActive?: boolean;
+  fullname?: string;
+  password: string;
+  roleId: string;
+  other_name?: string | null;
+  gender: PersonGender;
+  status: PersonStatus;
+  lastName?: string;
+  phone?: string | null;
+  birth_date?: string | null;
+  year_of_death?: number | null;
+  burial_place?: string | null;
+  address?: string | null;
+  biography?: string | null;
+  is_active?: boolean;
 }
 
 export interface PersonSearchParams {
   q?: string;
   page?: number;
   limit?: number;
-  isActive?: boolean;
+  is_active?: boolean;
 }
 
 export interface PaginatedResponse<T> {
   records: {
-    data: T[] | null;
+    items: T[] | null;
   };
   totalRecord: number;
 }
 
 export interface PersonFormValues {
-  familyId: string;
-  firstName: string;
-  lastName: string;
+  email?: string | null;
+  fullname?: string;
+  password: string;
+  roleId: string;
+  other_name?: string | null;
   gender: PersonGender;
-  birthDate: string;
-  otherName?: string;
-  yearOfDeath?: number;
-  burialPlace?: string;
-  address?: string;
-  biography?: string;
   status: PersonStatus;
-  email?: string;
-  isActive: boolean;
+  phone?: string | null;
+  birth_date?: Date | null;
+  year_of_death?: Date | null;
+  burial_place?: string | null;
+  address?: string | null;
+  biography?: string | null;
+  is_active: boolean;
 }

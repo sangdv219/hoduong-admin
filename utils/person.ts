@@ -6,15 +6,15 @@ export function personToFormValues(person: PersonDTO): PersonFormValues {
     firstName: person.firstName,
     lastName: person.lastName,
     gender: person.gender,
-    birthDate: person.birthDate,
-    otherName: person.otherName ?? undefined,
-    yearOfDeath: person.yearOfDeath ?? undefined,
-    burialPlace: person.burialPlace ?? undefined,
+    birth_date: person.birth_date,
+    other_name: person.other_name ?? undefined,
+    birth_date: person.birth_date ?? undefined,
+    burial_place: person.burial_place ?? undefined,
     address: person.address ?? undefined,
     biography: person.biography ?? undefined,
     status: person.status,
     email: person.email ?? undefined,
-    isActive: person.isActive,
+    is_active: person.is_active,
   };
 }
 

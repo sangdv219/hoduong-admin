@@ -10,15 +10,14 @@ import type {
 
 function buildSearchQuery(params: PersonSearchParams): string {
   const query = new URLSearchParams();
-
   if (params.q) query.set("q", params.q);
   if (params.page) query.set("page", String(params.page));
   if (params.limit) query.set("limit", String(params.limit));
+  if (params.is_active) query.set("is_active", String(params.is_active));
 
   const qs = query.toString();
   return qs ? `?${qs}` : "";
 }
-
 export const personService = {
   search(params: PersonSearchParams) {
     return apiClient<PaginatedResponse<PersonSearchRecordDTO>>(
@@ -47,14 +46,14 @@ export const personService = {
   deactivate(id: string) {
     return apiClient<PersonDTO>(`/user-admin/${id}`, {
       method: "PATCH",
-      body: { isActive: false },
+      body: { is_active: false, deleted_at: new Date() },
     });
   },
 
   activate(id: string) {
     return apiClient<PersonDTO>(`/user-admin/${id}`, {
       method: "PATCH",
-      body: { isActive: true },
+      body: { is_active: false },
     });
   },
 };

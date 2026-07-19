@@ -1,3 +1,5 @@
+"use client";
+
 import type { PersonDTO } from "@/types/person";
 import { formatGender } from "@/utils/person";
 import {
@@ -77,12 +79,12 @@ export function getPersonColumns(
     },
     {
       title: "Tên khác",
-      dataIndex: "otherName",
-      key: "otherName",
+      dataIndex: "other_name",
+      key: "other_name",
       width: 100,
-      render: (otherName: string | null) => (
+      render: (other_name: string | null) => (
         <span style={{ fontWeight: 500, color: "#1a1a1a" }}>
-          {otherName ?? "-"}
+          {other_name ?? "-"}
         </span>
       ),
     },
@@ -115,23 +117,32 @@ export function getPersonColumns(
       ),
     },
     {
-      title: "Ngày sinh",
-      dataIndex: "birthDate",
-      key: "birthDate",
-      width: 130,
-      render: (text: string) => (
-        <span style={{ fontVariantNumeric: "tabular-nums", color: "#374151" }}>
-          {text}
+      title: "Tuổi",
+      dataIndex: "age",
+      key: "age",
+      width: 100,
+      render: (age: number) => <span style={{ color: "#374151" }}>{age}</span>,
+    },
+    {
+      title: "Trạng thái",
+      dataIndex: "is_active",
+      key: "is_active",
+      // ellipsis: true,
+      render: (is_active: boolean) => (
+        <span style={{ color: "#6b7280", fontSize: 12 }}>
+          {is_active ? "Hoạt động" : "Vô hiệu hóa"}
         </span>
       ),
     },
     {
-      title: "Mã gia tộc",
-      dataIndex: "familyId",
-      key: "familyId",
+      title: "Tình trạng",
+      dataIndex: "status",
+      key: "status",
       ellipsis: true,
-      render: (text: string) => (
-        <span style={{ color: "#6b7280", fontSize: 12 }}>{text}</span>
+      render: (status: boolean) => (
+        <span style={{ color: "#6b7280", fontSize: 12 }}>
+          {status ? "Còn sống" : "Đã mất"}
+        </span>
       ),
     },
     {
