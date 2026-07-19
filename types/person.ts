@@ -37,9 +37,10 @@ export interface CreatePersonDTO {
   other_name?: string | null;
   gender: PersonGender;
   phone?: string | null;
-  birth_date?: string | null;
-  year_of_death?: number | null;
+  birth_date?: Date | string | null;
+  year_of_death?: Date | string | null;
   burial_place?: string | null;
+  age: number | null;
   address?: string | null;
   biography?: string | null;
   status?: PersonStatus;
@@ -56,9 +57,10 @@ export interface UpdatePersonDTO {
   status: PersonStatus;
   lastName?: string;
   phone?: string | null;
-  birth_date?: string | null;
-  year_of_death?: number | null;
+  birth_date?: Date | string | null;
+  year_of_death?: Date | string | null;
   burial_place?: string | null;
+  age: number | null;
   address?: string | null;
   biography?: string | null;
   is_active?: boolean;

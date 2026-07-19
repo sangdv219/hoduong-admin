@@ -43,7 +43,7 @@ export function PersonFormModal({
 }: PersonFormModalProps) {
   const [form] = Form.useForm();
   const isEdit = !!personId;
-
+  const currentStatus = Form.useWatch("status", form);
   const { data: person, isLoading: loadingDetail } = usePersonDetail(
     open && personId ? personId : null,
   );
@@ -67,14 +67,13 @@ export function PersonFormModal({
       });
     } else if (!isEdit) {
       form.setFieldsValue({
-        email: "abc@gmail.com",
+        email: "",
         password: "1234567",
-        other_name: "sang duong",
+        other_name: "",
         gender: "Nam",
-        phone: "0919528956",
-        address: "aasp 14",
+        phone: "",
+        address: "",
         status: 1,
-        is_active: false,
       });
     }
   }, [open, isEdit, person, form]);
@@ -83,9 +82,28 @@ export function PersonFormModal({
     try {
       const values = await form.validateFields();
 
-      const formattedBirth = values.birth_date
-        ? dayjs(values.birth_date).format("YYYY-MM-DD")
+      const yearOfDeath =
+        values.status === 0 ? (values.year_of_death ?? null) : null;
+      const burialPlace =
+        values.status === 0 ? values.burial_place || null : null;
+
+      // --- LOGIC TÍNH TOÁN TUỔI (AGE) ---
+      let calculatedAge: number | null = null;
+      const birthYear = values.birth_date
+        ? dayjs(values.birth_date).year()
         : null;
+
+      if (birthYear !== null) {
+        if (values.status === 0) {
+          if (yearOfDeath) {
+            const deathYear = dayjs(yearOfDeath).year();
+            calculatedAge = Math.max(0, deathYear - birthYear);
+          }
+        } else if (values.status === 1) {
+          // Còn sống: Năm hiện tại - Năm sinh
+          calculatedAge = Math.max(0, dayjs().year() - birthYear);
+        }
+      }
 
       if (isEdit && personId) {
         const payload: UpdatePersonDTO = {
@@ -94,9 +112,14 @@ export function PersonFormModal({
           password: values.password,
           phone: values.phone || null,
           roleId: "026e2174-aff3-4461-9f43-0e16c9a88f17",
-          birth_date: formattedBirth,
-          year_of_death: values.year_of_death ?? null,
+          birth_date: values.birth_date
+            ? dayjs(values.birth_date).toISOString()
+            : null,
+          year_of_death: values.year_of_death
+            ? dayjs(values.year_of_death).toISOString()
+            : null,
           burial_place: values.burial_place || null,
+          age: calculatedAge,
           address: values.address || null,
           biography: values.biography || null,
           status: values.status,
@@ -113,8 +136,14 @@ export function PersonFormModal({
           other_name: values.other_name || null,
           gender: values.gender,
           phone: values.phone || null,
-          birth_date: formattedBirth,
+          birth_date: values.birth_date
+            ? dayjs(values.birth_date).toISOString()
+            : null,
+          year_of_death: values.year_of_death
+            ? dayjs(values.year_of_death).toISOString()
+            : null,
           burial_place: values.burial_place || null,
+          age: calculatedAge,
           address: values.address || null,
           biography: values.biography || null,
           status: values.status || 1,
@@ -217,30 +246,33 @@ export function PersonFormModal({
           <div
             style={{
               display: "grid",
-              gridTemplateColumns: "1fr 1fr 1fr",
+              gridTemplateColumns: "1fr 1fr",
               gap: 12,
             }}
           >
             <Form.Item
               name="birth_date"
-              label="Ngày sinh123"
+              label="Ngày sinh"
               rules={[{ required: false }]}
             >
               <DatePicker style={{ width: "100%" }} format="DD/MM/YYYY" />
             </Form.Item>
 
-            <Form.Item name="year_of_death" label="Năm mất">
-              <InputNumber
-                style={{ width: "100%" }}
-                min={0}
-                max={2100}
-                placeholder="Năm mất"
-              />
+            <Form.Item name="status" label="Tình trạng">
+              <Select options={STATUS_OPTIONS} />
             </Form.Item>
 
-            <Form.Item name="burial_place" label="Nơi an táng">
-              <Input placeholder="Nghĩa trang..." />
-            </Form.Item>
+            {currentStatus === 0 && (
+              <>
+                <Form.Item name="year_of_death" label="Thời điểm mất">
+                  <DatePicker style={{ width: "100%" }} format="DD/MM/YYYY" />
+                </Form.Item>
+
+                <Form.Item name="burial_place" label="Nơi an táng">
+                  <Input placeholder="Nghĩa trang..." />
+                </Form.Item>
+              </>
+            )}
           </div>
 
           <Form.Item name="address" label="Địa chỉ sống">
@@ -259,9 +291,6 @@ export function PersonFormModal({
                 gap: 12,
               }}
             >
-              <Form.Item name="status" label="Trạng thái">
-                <Select options={STATUS_OPTIONS} />
-              </Form.Item>
               <Form.Item
                 name="is_active"
                 label="Kích hoạt"

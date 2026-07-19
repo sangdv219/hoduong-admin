@@ -1,31 +1,23 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
-import {
-  Button,
-  Form,
-  Input,
-  Select,
-  Table,
-  TableColumnsType,
-  Tooltip,
-} from "antd";
-import {
-  PlusOutlined,
-  ReloadOutlined,
-  SearchOutlined,
-} from "@ant-design/icons";
-import { GREEN_PRIMARY, SURFACE_BG } from "@/constants/colors";
 import { PageTitleBar } from "@/components/dashboard/shared/page-title-bar";
+import { GREEN_PRIMARY, SURFACE_BG } from "@/constants/colors";
 import {
   useActivatePerson,
   useDeactivatePerson,
   usePersons,
 } from "@/hooks/use-persons";
 import { usePersonFilterStore } from "@/stores/use-person-filter-store";
-import { PersonFormModal } from "./person-form-modal";
-import { getPersonColumns } from "./person-columns";
 import { PersonSearchRecordDTO } from "@/types/person";
+import {
+  PlusOutlined,
+  ReloadOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
+import { Button, Input, Select, Table, TableColumnsType, Tooltip } from "antd";
+import { useMemo, useState } from "react";
+import { getPersonColumns } from "./person-columns";
+import { PersonFormModal } from "./person-form-modal";
 
 export function NguoiDungView() {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
