@@ -1,4 +1,4 @@
-export type PersonGender = "Nam" | "Nữ";
+export type PersonGender = 0 | 1;
 
 export type PersonStatus = 1 | 0;
 
@@ -6,10 +6,14 @@ export interface PersonDTO {
   id: string;
   email: string;
   fullname: string;
+  password: string;
+  roleId: string;
   other_name?: string | null;
+  age?: number | null;
   gender: PersonGender;
   phone?: string | null;
-  birth_date?: number | null;
+  birth_date?: Date | null;
+  year_of_death?: Date | null;
   burial_place?: string | null;
   address?: string | null;
   biography?: string | null;
@@ -86,13 +90,14 @@ export interface PersonFormValues {
   password: string;
   roleId: string;
   other_name?: string | null;
+  age?: number | null;
   gender: PersonGender;
-  status: PersonStatus;
   phone?: string | null;
   birth_date?: Date | null;
   year_of_death?: Date | null;
   burial_place?: string | null;
   address?: string | null;
   biography?: string | null;
+  status: PersonStatus;
   is_active: boolean;
 }

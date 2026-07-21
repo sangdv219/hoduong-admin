@@ -1,5 +1,21 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  async headers() {
+    if (process.env.NODE_ENV === "development") {
+      return [
+        {
+          source: "/_next/static/(.*)",
+          headers: [
+            {
+              key: "Cache-Control",
+              value: "no-store, must-revalidate",
+            },
+          ],
+        },
+      ];
+    }
+    return [];
+  },
   typescript: {
     ignoreBuildErrors: true,
   },

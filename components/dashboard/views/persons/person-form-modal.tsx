@@ -1,24 +1,16 @@
 "use client";
 
-import { useEffect } from "react";
-import {
-  Form,
-  Input,
-  Modal,
-  Select,
-  DatePicker,
-  InputNumber,
-  Switch,
-  Spin,
-} from "antd";
-import dayjs from "dayjs";
+import { GENDER_OPTIONS, STATUS_OPTIONS } from "@/constants/api";
 import {
   useCreatePerson,
   usePersonDetail,
   useUpdatePerson,
 } from "@/hooks/use-persons";
-import { personToFormValues } from "@/utils/person";
 import type { CreatePersonDTO, UpdatePersonDTO } from "@/types/person";
+import { personToFormValues } from "@/utils/person";
+import { DatePicker, Form, Input, Modal, Select, Spin, Switch } from "antd";
+import dayjs from "dayjs";
+import { useEffect, useState } from "react";
 
 interface PersonFormModalProps {
   open: boolean;
@@ -26,15 +18,19 @@ interface PersonFormModalProps {
   onClose: () => void;
 }
 
-const GENDER_OPTIONS = [
-  { value: "Nam", label: "Nam" },
-  { value: "Nữ", label: "Nữ" },
-];
+function useFormValid(form: any) {
+  const [submittable, setSubmittable] = useState(false);
+  const values = Form.useWatch([], form); // Theo dõi toàn bộ thay đổi dữ liệu trong form
 
-const STATUS_OPTIONS = [
-  { value: 1, label: "Còn sống" },
-  { value: 0, label: "Đã mất" },
-];
+  useEffect(() => {
+    form.validateFields({ validateOnly: true }).then(
+      () => setSubmittable(true),
+      () => setSubmittable(false),
+    );
+  }, [form, values]);
+
+  return submittable;
+}
 
 export function PersonFormModal({
   open,
@@ -44,6 +40,9 @@ export function PersonFormModal({
   const [form] = Form.useForm();
   const isEdit = !!personId;
   const currentStatus = Form.useWatch("status", form);
+
+  const isFormValid = useFormValid(form);
+
   const { data: person, isLoading: loadingDetail } = usePersonDetail(
     open && personId ? personId : null,
   );
@@ -70,10 +69,10 @@ export function PersonFormModal({
         email: "",
         password: "1234567",
         other_name: "",
-        gender: "Nam",
+        gender: 0,
         phone: "",
         address: "",
-        status: 1,
+        status: 0,
       });
     }
   }, [open, isEdit, person, form]);
@@ -82,28 +81,32 @@ export function PersonFormModal({
     try {
       const values = await form.validateFields();
 
-      const yearOfDeath =
-        values.status === 0 ? (values.year_of_death ?? null) : null;
-      const burialPlace =
-        values.status === 0 ? values.burial_place || null : null;
-
       // --- LOGIC TÍNH TOÁN TUỔI (AGE) ---
-      let calculatedAge: number | null = null;
-      const birthYear = values.birth_date
-        ? dayjs(values.birth_date).year()
+      let age: number | null = null;
+
+      if (values.birth_date) {
+        const birthDate = dayjs(values.birth_date);
+
+        // ĐÚNG YÊU CẦU: Có ngày mất thì lấy ngày mất, không có thì lấy thời điểm hiện tại
+        const endDate = values.year_of_death
+          ? dayjs(values.year_of_death)
+          : dayjs();
+
+        // Tính toán độ chênh lệch theo số năm (làm tròn xuống hoàn toàn theo thực tế)
+        const calculatedAge = endDate.diff(birthDate, "year");
+
+        // Bắt buộc tránh số âm nếu nhập liệu sai lệch ngày tháng
+        age = calculatedAge < 0 ? 0 : calculatedAge;
+      }
+
+      // 2. Chuẩn hóa dữ liệu ngày tháng sang ISO String gửi lên Server
+      const birthISO = values.birth_date
+        ? dayjs(values.birth_date).toISOString()
         : null;
 
-      if (birthYear !== null) {
-        if (values.status === 0) {
-          if (yearOfDeath) {
-            const deathYear = dayjs(yearOfDeath).year();
-            calculatedAge = Math.max(0, deathYear - birthYear);
-          }
-        } else if (values.status === 1) {
-          // Còn sống: Năm hiện tại - Năm sinh
-          calculatedAge = Math.max(0, dayjs().year() - birthYear);
-        }
-      }
+      const deathISO = values.year_of_death
+        ? dayjs(values.year_of_death).toISOString()
+        : null;
 
       if (isEdit && personId) {
         const payload: UpdatePersonDTO = {
@@ -119,7 +122,7 @@ export function PersonFormModal({
             ? dayjs(values.year_of_death).toISOString()
             : null,
           burial_place: values.burial_place || null,
-          age: calculatedAge,
+          age: age,
           address: values.address || null,
           biography: values.biography || null,
           status: values.status,
@@ -143,7 +146,7 @@ export function PersonFormModal({
             ? dayjs(values.year_of_death).toISOString()
             : null,
           burial_place: values.burial_place || null,
-          age: calculatedAge,
+          age: age,
           address: values.address || null,
           biography: values.biography || null,
           status: values.status || 1,
@@ -168,6 +171,7 @@ export function PersonFormModal({
       okText={isEdit ? "Lưu" : "Thêm"}
       cancelText="Hủy"
       confirmLoading={submitting}
+      okButtonProps={{ disabled: !isFormValid }}
       // forceRender // <-- THÊM THUỘC TÍNH NÀY: Ép buộc render form ngầm để khởi tạo kết nối form instance
       width={640}
     >
@@ -187,11 +191,7 @@ export function PersonFormModal({
             <Input placeholder="duong@example.com" disabled={isEdit} />
           </Form.Item>
 
-          <Form.Item
-            name="password"
-            label="Mật khẩu"
-            initialValue={"abc123@45"}
-          >
+          <Form.Item name="password" label="Mật khẩu" initialValue={"1234567"}>
             <Input placeholder="1234567" disabled={true} />
           </Form.Item>
 
@@ -221,11 +221,7 @@ export function PersonFormModal({
               gap: 12,
             }}
           >
-            <Form.Item
-              name="gender"
-              label="Giới tính"
-              rules={[{ required: true, message: "Vui lòng chọn giới tính" }]}
-            >
+            <Form.Item name="gender" label="Giới tính">
               <Select options={GENDER_OPTIONS} />
             </Form.Item>
 
@@ -234,6 +230,7 @@ export function PersonFormModal({
               label="Số điện thoại"
               rules={[
                 {
+                  required: true,
                   pattern: /^0[0-9]{9}$/,
                   message: "Số điện thoại không hợp lệ",
                 },

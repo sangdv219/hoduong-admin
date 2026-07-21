@@ -47,7 +47,12 @@ export function NguoiDungView() {
           ? deactivateMutation.variables
           : null,
       }),
-    [activateMutation, deactivateMutation],
+    [
+      activateMutation.isPending,
+      activateMutation.variables,
+      deactivateMutation.isPending,
+      deactivateMutation.variables,
+    ],
   );
 
   function handleSearch() {

@@ -6,3 +6,13 @@ export const PERSON_QUERY_KEYS = {
     ["user-admin", "list", params] as const,
   detail: (id: string) => ["user-admin", "detail", id] as const,
 };
+
+export const GENDER_OPTIONS = [
+  { value: 0, label: "Nam" },
+  { value: 1, label: "Nữ" },
+];
+
+export const STATUS_OPTIONS = [
+  { value: 1, label: "Còn sống" },
+  { value: 0, label: "Đã mất" },
+];

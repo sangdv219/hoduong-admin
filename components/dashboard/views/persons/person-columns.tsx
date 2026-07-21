@@ -81,7 +81,7 @@ export function getPersonColumns(
       title: "Tên khác",
       dataIndex: "other_name",
       key: "other_name",
-      width: 100,
+      width: 200,
       render: (other_name: string | null) => (
         <span style={{ fontWeight: 500, color: "#1a1a1a" }}>
           {other_name ?? "-"}
