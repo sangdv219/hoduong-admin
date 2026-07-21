@@ -18,16 +18,25 @@ interface PersonFormModalProps {
   onClose: () => void;
 }
 
-function useFormValid(form: any) {
+function useFormValid(form: any, open: boolean, loading: boolean) {
   const [submittable, setSubmittable] = useState(false);
   const values = Form.useWatch([], form); // Theo dõi toàn bộ thay đổi dữ liệu trong form
 
   useEffect(() => {
-    form.validateFields({ validateOnly: true }).then(
-      () => setSubmittable(true),
-      () => setSubmittable(false),
-    );
-  }, [form, values]);
+    // Nếu modal chưa mở hoặc đang load detail thì tạm thời chưa validate
+    if (!open || loading) {
+      setSubmittable(false);
+      return;
+    }
+
+    form
+      .validateFields({ validateOnly: true })
+      .then(
+        () => setSubmittable(true),
+        () => setSubmittable(false),
+      )
+      .catch(() => setSubmittable(false));
+  }, [form, values, open, loading]);
 
   return submittable;
 }
@@ -40,18 +49,16 @@ export function PersonFormModal({
   const [form] = Form.useForm();
   const isEdit = !!personId;
   const currentStatus = Form.useWatch("status", form);
-
-  const isFormValid = useFormValid(form);
-
   const { data: person, isLoading: loadingDetail } = usePersonDetail(
     open && personId ? personId : null,
   );
+
+  const isFormValid = useFormValid(form, open, loadingDetail);
   const createMutation = useCreatePerson();
   const updateMutation = useUpdatePerson();
 
   const submitting = createMutation.isPending || updateMutation.isPending;
 
-  // CHỈ THỰC THI KHI MODAL ĐƯỢC MỞ
   useEffect(() => {
     if (!open) return; // Nếu đóng thì không làm gì cả, tránh gọi form instance lỗi
 
@@ -63,7 +70,12 @@ export function PersonFormModal({
       form.setFieldsValue({
         ...values,
         birth_date: values.birth_date ? dayjs(values.birth_date) : null,
+        year_of_death: values.year_of_death
+          ? dayjs(values.year_of_death)
+          : null,
       });
+
+      form.validateFields({ validateOnly: false }).catch(() => {});
     } else if (!isEdit) {
       form.setFieldsValue({
         email: "",
@@ -71,9 +83,14 @@ export function PersonFormModal({
         other_name: "",
         gender: 0,
         phone: "",
-        address: "",
+        birth_date: "",
         status: 0,
+        year_of_death: "",
+        burial_place: "",
+        address: "",
+        biography: "",
       });
+      form.validateFields({ validateOnly: true }).catch(() => {});
     }
   }, [open, isEdit, person, form]);
 
@@ -99,34 +116,24 @@ export function PersonFormModal({
         age = calculatedAge < 0 ? 0 : calculatedAge;
       }
 
-      // 2. Chuẩn hóa dữ liệu ngày tháng sang ISO String gửi lên Server
-      const birthISO = values.birth_date
-        ? dayjs(values.birth_date).toISOString()
-        : null;
-
-      const deathISO = values.year_of_death
-        ? dayjs(values.year_of_death).toISOString()
-        : null;
-
       if (isEdit && personId) {
         const payload: UpdatePersonDTO = {
-          gender: values.gender,
-          other_name: values.other_name || null,
-          password: values.password,
-          phone: values.phone || null,
+          fullname: values.fullname,
           roleId: "026e2174-aff3-4461-9f43-0e16c9a88f17",
+          other_name: values.other_name,
+          gender: values.gender,
+          phone: values.phone || null,
           birth_date: values.birth_date
             ? dayjs(values.birth_date).toISOString()
             : null,
+          status: values.status,
           year_of_death: values.year_of_death
             ? dayjs(values.year_of_death).toISOString()
             : null,
-          burial_place: values.burial_place || null,
           age: age,
+          burial_place: values.burial_place || null,
           address: values.address || null,
           biography: values.biography || null,
-          status: values.status,
-          email: values.email || null,
           is_active: values.is_active,
         };
         await updateMutation.mutateAsync({ id: personId, payload });
@@ -152,7 +159,6 @@ export function PersonFormModal({
           status: values.status || 1,
           is_active: values.is_active,
         };
-        console.log("payload", payload);
         await createMutation.mutateAsync(payload);
       }
 
@@ -259,7 +265,7 @@ export function PersonFormModal({
               <Select options={STATUS_OPTIONS} />
             </Form.Item>
 
-            {currentStatus === 0 && (
+            {currentStatus == 0 && (
               <>
                 <Form.Item name="year_of_death" label="Thời điểm mất">
                   <DatePicker style={{ width: "100%" }} format="DD/MM/YYYY" />

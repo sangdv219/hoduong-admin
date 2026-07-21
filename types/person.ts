@@ -52,19 +52,16 @@ export interface CreatePersonDTO {
 }
 
 export interface UpdatePersonDTO {
-  email?: string | null;
-  fullname?: string;
-  password: string;
+  fullname: string;
   roleId: string;
-  other_name?: string | null;
+  other_name: string | null;
   gender: PersonGender;
-  status: PersonStatus;
-  lastName?: string;
-  phone?: string | null;
+  phone: string | null;
+  age: number | null;
   birth_date?: Date | string | null;
+  status: PersonStatus;
   year_of_death?: Date | string | null;
   burial_place?: string | null;
-  age: number | null;
   address?: string | null;
   biography?: string | null;
   is_active?: boolean;
@@ -78,9 +75,7 @@ export interface PersonSearchParams {
 }
 
 export interface PaginatedResponse<T> {
-  records: {
-    items: T[] | null;
-  };
+  items: T[] | null;
   totalRecord: number;
 }
 

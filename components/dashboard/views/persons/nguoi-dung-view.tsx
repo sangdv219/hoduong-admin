@@ -212,7 +212,7 @@ export function NguoiDungView() {
             columns={
               columns as unknown as TableColumnsType<PersonSearchRecordDTO>
             }
-            dataSource={data?.records?.items ?? ([] as PersonSearchRecordDTO[])}
+            dataSource={data?.items ?? ([] as PersonSearchRecordDTO[])}
             loading={isLoading}
             pagination={{
               current: page,

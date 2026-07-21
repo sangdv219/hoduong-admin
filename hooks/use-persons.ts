@@ -18,7 +18,6 @@ function handleMutationError(
 
 export function usePersons() {
   const { search, page, limit, is_active } = usePersonFilterStore();
-  console.log("is_active", is_active);
   return useQuery({
     queryKey: PERSON_QUERY_KEYS.list({ search, page, limit, is_active }),
     queryFn: () =>

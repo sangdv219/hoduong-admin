@@ -20,7 +20,6 @@ function buildSearchQuery(params: PersonSearchParams): string {
 }
 export const personService = {
   search(params: PersonSearchParams) {
-    console.log("params", params);
     return apiClient<PaginatedResponse<PersonSearchRecordDTO>>(
       `/user-admin${buildSearchQuery(params)}`,
     );
