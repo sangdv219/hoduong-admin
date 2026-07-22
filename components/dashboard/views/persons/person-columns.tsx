@@ -15,9 +15,37 @@ interface PersonColumnHandlers {
   onEdit: (id: string) => void;
   onDeactivate: (id: string) => void;
   onActivate: (id: string) => void;
+  onDelete: (id: string) => void;
   activatingId?: string | null;
   deactivatingId?: string | null;
 }
+
+const Status = {
+  ACTIVE: "active",
+  INACTIVE: "inactive",
+  PENDING: "pending",
+  SUSPENDED: "suspended",
+  ARCHIVED: "archived",
+} as const;
+
+type StatusType = (typeof Status)[keyof typeof Status];
+
+const STATUS_CONFIG: Record<StatusType, { label: string; color: string }> = {
+  [Status.ACTIVE]: { label: "Kích hoạt", color: "#10b981" },
+  [Status.INACTIVE]: { label: "Tạm dừng", color: "#6b7280" },
+  [Status.PENDING]: { label: "Chờ xử lý", color: "#f59e0b" },
+  [Status.SUSPENDED]: { label: "Tạm dừng", color: "#ef4444" },
+  [Status.ARCHIVED]: { label: "Đã lưu trữ", color: "#9ca3af" },
+};
+const canActivate = (status: any) => {
+  return (
+    status === Status.INACTIVE ||
+    status === Status.PENDING ||
+    status === Status.SUSPENDED
+  );
+};
+
+const canInActivate = (status: any) => status === Status.ACTIVE;
 
 export function getPersonColumns(
   handlers: PersonColumnHandlers,
@@ -38,34 +66,38 @@ export function getPersonColumns(
               style={{ color: "#1a7a48" }}
             />
           </Tooltip>
-          <Popconfirm
-            title="Vô hiệu hóa người dùng?"
-            description="Người dùng sẽ bị đánh dấu không hoạt động."
-            okText="Vô hiệu hóa"
-            cancelText="Hủy"
-            okButtonProps={{ danger: true }}
-            onConfirm={() => handlers.onDeactivate(record.id)}
-          >
-            <Tooltip title="Vô hiệu hóa">
+          {canInActivate(record.status) && (
+            <Popconfirm
+              title="Tạm dừng người dùng?"
+              description="Người dùng sẽ bị đánh dấu không hoạt động."
+              okText="Tạm dừng"
+              cancelText="Hủy"
+              okButtonProps={{ danger: true }}
+              onConfirm={() => handlers.onDeactivate(record.id)}
+            >
+              <Tooltip title="Tạm dừng">
+                <Button
+                  type="text"
+                  size="small"
+                  icon={<PauseCircleOutlined />}
+                  loading={handlers.deactivatingId === record.id}
+                  style={{ color: "#f59e0b" }}
+                />
+              </Tooltip>
+            </Popconfirm>
+          )}
+          {canActivate(record.status) && (
+            <Tooltip title="Kích hoạt">
               <Button
                 type="text"
                 size="small"
-                icon={<PauseCircleOutlined />}
-                loading={handlers.deactivatingId === record.id}
-                style={{ color: "#f59e0b" }}
+                icon={<PlayCircleOutlined />}
+                loading={handlers.activatingId === record.id}
+                onClick={() => handlers.onActivate(record.id)}
+                style={{ color: "#22c55e" }}
               />
             </Tooltip>
-          </Popconfirm>
-          <Tooltip title="Kích hoạt">
-            <Button
-              type="text"
-              size="small"
-              icon={<PlayCircleOutlined />}
-              loading={handlers.activatingId === record.id}
-              onClick={() => handlers.onActivate(record.id)}
-              style={{ color: "#22c55e" }}
-            />
-          </Tooltip>
+          )}
         </Space>
       ),
     },
@@ -124,26 +156,32 @@ export function getPersonColumns(
       render: (age: number) => <span style={{ color: "#374151" }}>{age}</span>,
     },
     {
-      title: "Trạng thái",
-      dataIndex: "is_active",
-      key: "is_active",
-      // ellipsis: true,
-      render: (is_active: boolean) => (
+      title: "Tình trạng",
+      dataIndex: "life_status",
+      key: "life_status",
+      render: (life_status: 0 | 1) => (
         <span style={{ color: "#6b7280", fontSize: 12 }}>
-          {is_active ? "Hoạt động" : "Vô hiệu hóa"}
+          {life_status ? "Còn sống" : "Đã mất"}
         </span>
       ),
     },
     {
-      title: "Tình trạng",
+      title: "Trạng thái",
       dataIndex: "status",
       key: "status",
       ellipsis: true,
-      render: (status: boolean) => (
-        <span style={{ color: "#6b7280", fontSize: 12 }}>
-          {status ? "Còn sống" : "Đã mất"}
-        </span>
-      ),
+      render: (status: StatusType) => {
+        const config = STATUS_CONFIG[status] ?? {
+          label: "Không xác định",
+          color: "#6b7280",
+        };
+
+        return (
+          <span style={{ color: config.color, fontSize: 12 }}>
+            {config.label}
+          </span>
+        );
+      },
     },
     {
       title: "",
@@ -153,11 +191,11 @@ export function getPersonColumns(
       render: (_, record) => (
         <Popconfirm
           title="Xóa người dùng?"
-          description="Hành động này sẽ vô hiệu hóa người dùng trên hệ thống."
+          description="Hành động này sẽ Tạm dừng người dùng trên hệ thống."
           okText="Xóa"
           cancelText="Hủy"
           okButtonProps={{ danger: true }}
-          onConfirm={() => handlers.onDeactivate(record.id)}
+          onConfirm={() => handlers.onDelete(record.id)}
         >
           <Button
             type="text"

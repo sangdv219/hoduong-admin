@@ -122,7 +122,7 @@ Response
 "biography": null,
 "status": "ALIVE",
 "email": "duong@example.com",
-"is_active": true
+"status": true
 }
 
 # Update Person
@@ -182,7 +182,7 @@ Response
 "createdBy": "Admin",
 "updatedAt": "2026-06-20T09:40:00.000Z",
 "updatedBy": null,
-"is_active": true,
+"status": true,
 "members": 2,
 "user": {
 "id": "u1111111-1111-1111-1111-111111111111",
@@ -196,7 +196,7 @@ Response
 "biography": "Người sáng lập dòng họ Nguyễn Văn.",
 "status": "DECEASED",
 "email": "cuto@nguyen.org",
-"is_active": true,
+"status": true,
 "createdAt": "2026-06-20T09:00:00.000Z",
 "updatedBy": "Admin"
 },
@@ -209,7 +209,7 @@ Response
 "createdBy": "Admin",
 "updatedAt": "2026-06-20T09:45:00.000Z",
 "updatedBy": null,
-"is_active": true,
+"status": true,
 "members": 1,
 "user": {
 "id": "u2222222-2222-2222-2222-222222222222",
@@ -223,7 +223,7 @@ Response
 "biography": "Trưởng nam đời thứ hai.",
 "status": "DECEASED",
 "email": "bacca@nguyen.org",
-"is_active": true,
+"status": true,
 "createdAt": "2026-06-20T09:10:00.000Z",
 "updatedBy": "Admin"
 },
@@ -269,26 +269,26 @@ Response
 "createdBy": "Admin",
 "updatedAt": "2026-06-20T09:40:00.000Z",
 "updatedBy": null,
-"is_active": true,
+"status": true,
 "members": 2,
 "parent": null,
 "user": {
 "id": "u1111111-1111-1111-1111-111111111111",
 "fullname": "Nguyễn Văn Tổ",
-"is_active": true
+"status": true
 },
 "couples": [
 {
 "id": "cp999999-9999-9999-9999-999999999999",
 "level": 1,
 "userId": "spouse-uuid-here",
-"is_active": true,
+"status": true,
 "nodeId": "e2c349a0-128b-4c07-9bb3-50012bc0ae31",
 "user": {
 "id": "spouse-uuid-here",
 "fullname": "Trần Thị Tổ",
 "gender": "FEMALE",
-"is_active": true
+"status": true
 }
 }
 ]
@@ -310,26 +310,26 @@ Response
 "createdAt": "2026-06-20T09:40:00.000Z",
 "createdBy": "Admin",
 "updatedAt": "2026-06-20T09:40:00.000Z",
-"is_active": true,
+"status": true,
 "members": 1,
 "user": {
 "id": "u1111111-1111-1111-1111-111111111111",
 "fullname": "Nguyễn Văn Tổ",
 "gender": "MALE",
-"is_active": true
+"status": true
 },
 "couples": [
 {
 "id": "couple-uuid-1234",
 "level": 1,
 "userId": "spouse-uuid-here",
-"is_active": true,
+"status": true,
 "nodeId": "e2c349a0-128b-4c07-9bb3-50012bc0ae31",
 "user": {
 "id": "spouse-uuid-here",
 "fullname": "Trần Thị Tổ",
 "gender": "FEMALE",
-"is_active": true
+"status": true
 }
 }
 ]
@@ -346,7 +346,7 @@ Request
 "parentId": "e2c349a0-128b-4c07-9bb3-50012bc0ae31",
 "coupleUserId": "u5555555-5555-5555-5555-555555555555",
 "members": 2,
-"is_active": true
+"status": true
 }
 
 Update Node
@@ -360,7 +360,7 @@ Request
 "userId": "u1111111-1111-1111-1111-111111111111",
 "parentId": "parent-node-uuid-if-change",
 "members": 3,
-"is_active": true
+"status": true
 }
 
 Response

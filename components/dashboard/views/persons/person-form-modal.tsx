@@ -1,6 +1,6 @@
 "use client";
 
-import { GENDER_OPTIONS, STATUS_OPTIONS } from "@/constants/api";
+import { GENDER_OPTIONS, Status, STATUS_OPTIONS } from "@/constants/api";
 import {
   useCreatePerson,
   usePersonDetail,
@@ -48,7 +48,7 @@ export function PersonFormModal({
 }: PersonFormModalProps) {
   const [form] = Form.useForm();
   const isEdit = !!personId;
-  const currentStatus = Form.useWatch("status", form);
+  const currentStatus = Form.useWatch("life_status", form);
   const { data: person, isLoading: loadingDetail } = usePersonDetail(
     open && personId ? personId : null,
   );
@@ -73,6 +73,7 @@ export function PersonFormModal({
         year_of_death: values.year_of_death
           ? dayjs(values.year_of_death)
           : null,
+        status: values.status === Status.ACTIVE,
       });
 
       form.validateFields({ validateOnly: false }).catch(() => {});
@@ -126,7 +127,8 @@ export function PersonFormModal({
           birth_date: values.birth_date
             ? dayjs(values.birth_date).toISOString()
             : null,
-          status: values.status,
+          status: values.status ? Status.ACTIVE : Status.INACTIVE,
+          life_status: values.life_status,
           year_of_death: values.year_of_death
             ? dayjs(values.year_of_death).toISOString()
             : null,
@@ -134,7 +136,6 @@ export function PersonFormModal({
           burial_place: values.burial_place || null,
           address: values.address || null,
           biography: values.biography || null,
-          is_active: values.is_active,
         };
         await updateMutation.mutateAsync({ id: personId, payload });
       } else {
@@ -149,6 +150,7 @@ export function PersonFormModal({
           birth_date: values.birth_date
             ? dayjs(values.birth_date).toISOString()
             : null,
+          life_status: values.life_status,
           year_of_death: values.year_of_death
             ? dayjs(values.year_of_death).toISOString()
             : null,
@@ -156,9 +158,8 @@ export function PersonFormModal({
           age: age,
           address: values.address || null,
           biography: values.biography || null,
-          status: values.status || 1,
-          is_active: values.is_active,
         };
+
         await createMutation.mutateAsync(payload);
       }
 
@@ -261,7 +262,7 @@ export function PersonFormModal({
               <DatePicker style={{ width: "100%" }} format="DD/MM/YYYY" />
             </Form.Item>
 
-            <Form.Item name="status" label="Tình trạng">
+            <Form.Item name="life_status" label="Tình trạng">
               <Select options={STATUS_OPTIONS} />
             </Form.Item>
 
@@ -285,24 +286,6 @@ export function PersonFormModal({
           <Form.Item name="biography" label="Tiểu sử">
             <Input.TextArea rows={3} placeholder="Thông tin tiểu sử..." />
           </Form.Item>
-
-          {isEdit && (
-            <div
-              style={{
-                display: "grid",
-                gridTemplateColumns: "1fr 1fr",
-                gap: 12,
-              }}
-            >
-              <Form.Item
-                name="is_active"
-                label="Kích hoạt"
-                valuePropName="checked"
-              >
-                <Switch />
-              </Form.Item>
-            </div>
-          )}
         </Form>
       </Spin>
     </Modal>

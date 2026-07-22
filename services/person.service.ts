@@ -1,3 +1,4 @@
+import { Status } from "@/constants/api";
 import { apiClient } from "@/lib/api-client";
 import type {
   CreatePersonDTO,
@@ -13,7 +14,6 @@ function buildSearchQuery(params: PersonSearchParams): string {
   if (params.q) query.set("q", params.q);
   if (params.page) query.set("page", String(params.page));
   if (params.limit) query.set("limit", String(params.limit));
-  if (params.is_active) query.set("is_active", String(params.is_active));
 
   const qs = query.toString();
   return qs ? `?${qs}` : "";
@@ -46,14 +46,21 @@ export const personService = {
   deactivate(id: string) {
     return apiClient<PersonDTO>(`/user-admin/${id}`, {
       method: "PATCH",
-      body: { is_active: false, deleted_at: new Date() },
+      body: { status: Status.INACTIVE },
+    });
+  },
+
+  delete(id: string) {
+    return apiClient<PersonDTO>(`/user-admin/${id}`, {
+      method: "PATCH",
+      body: { status: Status.ARCHIVED, deleted_at: new Date() },
     });
   },
 
   activate(id: string) {
     return apiClient<PersonDTO>(`/user-admin/${id}`, {
       method: "PATCH",
-      body: { is_active: false },
+      body: { status: Status.ACTIVE },
     });
   },
 };

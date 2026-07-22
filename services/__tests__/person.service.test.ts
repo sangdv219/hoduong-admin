@@ -40,14 +40,14 @@ describe("personService", () => {
     });
   });
 
-  it("deactivate soft-deletes via is_active false", async () => {
-    vi.mocked(apiClient).mockResolvedValue({ id: "p1", is_active: false });
+  it("deactivate soft-deletes via status false", async () => {
+    vi.mocked(apiClient).mockResolvedValue({ id: "p1", status: false });
 
     await personService.deactivate("p1");
 
     expect(apiClient).toHaveBeenCalledWith("/user-admin/p1", {
       method: "PATCH",
-      body: { is_active: false },
+      body: { status: false },
     });
   });
 });

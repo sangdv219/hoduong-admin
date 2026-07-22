@@ -5,6 +5,7 @@ import { GREEN_PRIMARY, SURFACE_BG } from "@/constants/colors";
 import {
   useActivatePerson,
   useDeactivatePerson,
+  useDeletePerson,
   usePersons,
 } from "@/hooks/use-persons";
 import { usePersonFilterStore } from "@/stores/use-person-filter-store";
@@ -30,6 +31,7 @@ export function NguoiDungView() {
   const { data, isLoading, isFetching, refetch, error } = usePersons();
   const deactivateMutation = useDeactivatePerson();
   const activateMutation = useActivatePerson();
+  const deleteMutation = useDeletePerson();
 
   const columns = useMemo(
     () =>
@@ -38,6 +40,7 @@ export function NguoiDungView() {
           setEditingId(id);
           setModalOpen(true);
         },
+        onDelete: (id) => deleteMutation.mutate(id),
         onDeactivate: (id) => deactivateMutation.mutate(id),
         onActivate: (id) => activateMutation.mutate(id),
         activatingId: activateMutation.isPending

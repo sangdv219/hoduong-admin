@@ -223,12 +223,12 @@ const displayName = user.nickname || user.fullName;
 // Before
 const activeUsers: User[] = [];
 for (const user of users) {
-  if (user.is_active) {
+  if (user.status) {
     activeUsers.push(user);
   }
 }
 // After
-const activeUsers = users.filter((user) => user.is_active);
+const activeUsers = users.filter((user) => user.status);
 
 // SIMPLIFY: Redundant boolean return
 // Before

@@ -1,6 +1,4 @@
-export type PersonGender = 0 | 1;
-
-export type PersonStatus = 1 | 0;
+import { PersonGender, PersonStatus, Status } from "@/constants/api";
 
 export interface PersonDTO {
   id: string;
@@ -17,8 +15,8 @@ export interface PersonDTO {
   burial_place?: string | null;
   address?: string | null;
   biography?: string | null;
-  status: PersonStatus;
-  is_active: boolean;
+  life_status: PersonStatus;
+  status: Status;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -47,8 +45,7 @@ export interface CreatePersonDTO {
   age: number | null;
   address?: string | null;
   biography?: string | null;
-  status?: PersonStatus;
-  is_active: boolean;
+  life_status: PersonStatus;
 }
 
 export interface UpdatePersonDTO {
@@ -59,19 +56,18 @@ export interface UpdatePersonDTO {
   phone: string | null;
   age: number | null;
   birth_date?: Date | string | null;
-  status: PersonStatus;
+  life_status: PersonStatus;
+  status: Status;
   year_of_death?: Date | string | null;
   burial_place?: string | null;
   address?: string | null;
   biography?: string | null;
-  is_active?: boolean;
 }
 
 export interface PersonSearchParams {
   q?: string;
   page?: number;
   limit?: number;
-  is_active?: boolean;
 }
 
 export interface PaginatedResponse<T> {
@@ -93,6 +89,6 @@ export interface PersonFormValues {
   burial_place?: string | null;
   address?: string | null;
   biography?: string | null;
-  status: PersonStatus;
-  is_active: boolean;
+  status?: Status;
+  life_status: PersonStatus;
 }

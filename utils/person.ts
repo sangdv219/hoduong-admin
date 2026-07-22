@@ -16,14 +16,10 @@ export function personToFormValues(person: PersonDTO): PersonFormValues {
     address: person.address ?? undefined,
     biography: person.biography ?? undefined,
     status: person.status,
-    is_active: person.is_active,
+    life_status: person.life_status,
   };
 }
 
 export function formatGender(gender: PersonDTO["gender"]): string {
   return gender === 0 ? "Nam" : "Nữ";
-}
-
-export function formatStatus(status: PersonDTO["status"]): string {
-  return status === 1 ? "Còn sống" : "Đã mất";
 }

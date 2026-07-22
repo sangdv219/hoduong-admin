@@ -17,15 +17,14 @@ function handleMutationError(
 }
 
 export function usePersons() {
-  const { search, page, limit, is_active } = usePersonFilterStore();
+  const { search, page, limit, status } = usePersonFilterStore();
   return useQuery({
-    queryKey: PERSON_QUERY_KEYS.list({ search, page, limit, is_active }),
+    queryKey: PERSON_QUERY_KEYS.list({ search, page, limit, status }),
     queryFn: () =>
       personService.search({
         q: search || undefined,
         page,
         limit,
-        is_active,
       }),
     placeholderData: (prev) => prev,
   });
@@ -83,6 +82,21 @@ export function useDeactivatePerson() {
     },
     onError: (error) =>
       handleMutationError(error, "Không thể vô hiệu hóa người dùng", message),
+  });
+}
+
+export function useDeletePerson() {
+  const queryClient = useQueryClient();
+  const { message } = App.useApp();
+
+  return useMutation({
+    mutationFn: (id: string) => personService.delete(id),
+    onSuccess: () => {
+      message.success("Đã xoá người dùng");
+      queryClient.invalidateQueries({ queryKey: PERSON_QUERY_KEYS.all });
+    },
+    onError: (error) =>
+      handleMutationError(error, "Không thể xóa người dùng", message),
   });
 }
 

@@ -13,6 +13,18 @@ export const GENDER_OPTIONS = [
 ];
 
 export const STATUS_OPTIONS = [
-  { value: 1, label: "Còn sống" },
   { value: 0, label: "Đã mất" },
+  { value: 1, label: "Còn sống" },
 ];
+
+export type PersonGender = 0 | 1;
+
+export type PersonStatus = 0 | 1;
+
+export enum Status {
+  ACTIVE = "active",
+  INACTIVE = "inactive",
+  PENDING = "pending",
+  SUSPENDED = "suspended",
+  ARCHIVED = "archived",
+}
