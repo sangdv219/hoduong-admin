@@ -57,7 +57,6 @@ export interface UpdatePersonDTO {
   age: number | null;
   birth_date?: Date | string | null;
   life_status: PersonStatus;
-  status: Status;
   year_of_death?: Date | string | null;
   burial_place?: string | null;
   address?: string | null;

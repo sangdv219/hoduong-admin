@@ -73,7 +73,7 @@ export function PersonFormModal({
         year_of_death: values.year_of_death
           ? dayjs(values.year_of_death)
           : null,
-        status: values.status === Status.ACTIVE,
+        // status: values.status === Status.ACTIVE,
       });
 
       form.validateFields({ validateOnly: false }).catch(() => {});
@@ -85,7 +85,7 @@ export function PersonFormModal({
         gender: 0,
         phone: "",
         birth_date: "",
-        status: 0,
+        life_status: 1,
         year_of_death: "",
         burial_place: "",
         address: "",
@@ -98,7 +98,6 @@ export function PersonFormModal({
   async function handleSubmit() {
     try {
       const values = await form.validateFields();
-
       // --- LOGIC TÍNH TOÁN TUỔI (AGE) ---
       let age: number | null = null;
 
@@ -118,6 +117,8 @@ export function PersonFormModal({
       }
 
       if (isEdit && personId) {
+        console.log("values", values);
+
         const payload: UpdatePersonDTO = {
           fullname: values.fullname,
           roleId: "026e2174-aff3-4461-9f43-0e16c9a88f17",
@@ -127,7 +128,6 @@ export function PersonFormModal({
           birth_date: values.birth_date
             ? dayjs(values.birth_date).toISOString()
             : null,
-          status: values.status ? Status.ACTIVE : Status.INACTIVE,
           life_status: values.life_status,
           year_of_death: values.year_of_death
             ? dayjs(values.year_of_death).toISOString()

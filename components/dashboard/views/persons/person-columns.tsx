@@ -191,7 +191,7 @@ export function getPersonColumns(
       render: (_, record) => (
         <Popconfirm
           title="Xóa người dùng?"
-          description="Hành động này sẽ Tạm dừng người dùng trên hệ thống."
+          description="Hành động này sẽ đưa người dùng vào hệ thống rác."
           okText="Xóa"
           cancelText="Hủy"
           okButtonProps={{ danger: true }}
