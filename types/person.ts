@@ -64,11 +64,13 @@ export interface UpdatePersonDTO {
 }
 
 export interface PersonSearchParams {
+  keyword?: string;
   q?: string;
   page?: number;
   limit?: number;
-  // status?: "suspended" | "pending" | "inactive" | "active";
   status?: "suspended" | "pending" | "inactive" | "active";
+  gender?: number;
+  life_status?: number;
 }
 
 export interface PaginatedResponse<T> {

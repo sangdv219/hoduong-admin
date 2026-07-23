@@ -24,10 +24,22 @@ export function NguoiDungView() {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [localSearch, setLocalSearch] = useState("");
+  // const [localSearch, setLocalSearch] = useState("");
 
-  const { search, page, limit, status, setSearch, setPage, reset, setStatus } =
-    usePersonFilterStore();
+  const {
+    keyword,
+    page,
+    limit,
+    status,
+    gender,
+    life_status,
+    setKeyword,
+    setPage,
+    reset,
+    setStatus,
+    setGender,
+    setLifeStatus,
+  } = usePersonFilterStore();
   const { data, isLoading, isFetching, refetch, error } = usePersons();
   const deactivateMutation = useDeactivatePerson();
   const activateMutation = useActivatePerson();
@@ -60,7 +72,7 @@ export function NguoiDungView() {
   );
 
   function handleSearch() {
-    setSearch(localSearch);
+    // setKeyword(localSearch);
     setPage(1);
   }
 
@@ -70,7 +82,14 @@ export function NguoiDungView() {
     setStatus(value);
     setPage(1);
   };
-
+  const handleGenderChange = (value?: number) => {
+    setGender(value === undefined ? undefined : value);
+    // setPage(1);
+  };
+  const handleLifeStatusChange = (value?: number) => {
+    setLifeStatus(value === undefined ? undefined : value);
+    // setPage(1);
+  };
   function handleAdd() {
     setEditingId(null);
     setModalOpen(true);
@@ -127,16 +146,16 @@ export function NguoiDungView() {
           }}
         >
           <Input
-            value={localSearch}
-            onChange={(e) => setLocalSearch(e.target.value)}
+            value={keyword}
+            onChange={(e) => setKeyword(e.target.value)}
             onPressEnter={handleSearch}
             prefix={<SearchOutlined style={{ color: "#9ca3af" }} />}
-            placeholder="Tìm theo tên người dùng..."
+            placeholder="Tìm theo tên, sdt, email người dùng..."
             style={{ width: 300, height: 34, borderRadius: 6, fontSize: 13 }}
             allowClear
             onClear={() => {
-              setLocalSearch("");
-              setSearch("");
+              // setLocalSearch("");
+              setKeyword("");
               setPage(1);
             }}
           />
@@ -156,6 +175,30 @@ export function NguoiDungView() {
               { value: "inactive", label: "Ngừng hoạt động" },
               { value: "pending", label: "Chờ xử lý" },
               { value: "suspended", label: "Bị đình chỉ" },
+            ]}
+            // disabled
+          />
+          <Select
+            placeholder="Giới tính"
+            style={{ width: 170, height: 34 }}
+            allowClear
+            value={gender}
+            onChange={handleGenderChange}
+            options={[
+              { value: 0, label: "Nam" },
+              { value: 1, label: "Nữ" },
+            ]}
+            // disabled
+          />
+          <Select
+            placeholder="Tình trạng"
+            style={{ width: 170, height: 34 }}
+            allowClear
+            value={life_status}
+            onChange={handleLifeStatusChange}
+            options={[
+              { value: 0, label: "Đã mất" },
+              { value: 1, label: "Còn sống" },
             ]}
             // disabled
           />
@@ -179,12 +222,12 @@ export function NguoiDungView() {
             />
           </Tooltip>
 
-          {(search || status || page > 1) && (
+          {(keyword || status || page > 1) && (
             <Button
               type="link"
               onClick={() => {
                 reset();
-                setLocalSearch("");
+                // setLocalSearch("");
               }}
               style={{ fontSize: 13 }}
             >

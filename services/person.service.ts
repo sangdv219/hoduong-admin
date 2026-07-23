@@ -11,16 +11,22 @@ import type {
 
 function buildSearchQuery(params: PersonSearchParams): string {
   const query = new URLSearchParams();
-  if (params.q) query.set("q", params.q);
-  if (params.page) query.set("page", String(params.page));
-  if (params.limit) query.set("limit", String(params.limit));
-  if (params.status) query.set("status", String(params.status));
+  // if (params.q !== undefined && params.q !== "") query.set("q", params.q);
+  if (params.keyword !== undefined)
+    query.set("keyword", String(params.keyword));
+  if (params.page !== undefined) query.set("page", String(params.page));
+  if (params.limit !== undefined) query.set("limit", String(params.limit));
+  if (params.status !== undefined) query.set("status", String(params.status));
+  if (params.gender !== undefined) query.set("gender", String(params.gender));
+  if (params.life_status !== undefined)
+    query.set("life_status", String(params.life_status));
 
   const qs = query.toString();
   return qs ? `?${qs}` : "";
 }
 export const personService = {
   search(params: PersonSearchParams) {
+    console.log("params", params);
     return apiClient<PaginatedResponse<PersonSearchRecordDTO>>(
       `/user-admin${buildSearchQuery(params)}`,
     );

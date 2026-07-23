@@ -17,15 +17,26 @@ function handleMutationError(
 }
 
 export function usePersons() {
-  const { search, page, limit, status } = usePersonFilterStore();
+  const { keyword, page, limit, status, gender, life_status } =
+    usePersonFilterStore();
+
   return useQuery({
-    queryKey: PERSON_QUERY_KEYS.list({ search, page, limit, status }),
+    queryKey: PERSON_QUERY_KEYS.list({
+      keyword,
+      page,
+      limit,
+      status,
+      gender,
+      life_status,
+    }),
     queryFn: () =>
       personService.search({
-        q: search || undefined,
+        keyword: keyword || undefined,
         page,
         limit,
         status,
+        gender: gender ?? undefined,
+        life_status: life_status ?? undefined,
       }),
     placeholderData: (prev) => prev,
   });
