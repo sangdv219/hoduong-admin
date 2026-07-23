@@ -32,9 +32,9 @@ type StatusType = (typeof Status)[keyof typeof Status];
 
 const STATUS_CONFIG: Record<StatusType, { label: string; color: string }> = {
   [Status.ACTIVE]: { label: "Kích hoạt", color: "#10b981" },
-  [Status.INACTIVE]: { label: "Tạm dừng", color: "#6b7280" },
+  [Status.INACTIVE]: { label: "Ngừng hoạt động", color: "#6b7280" },
   [Status.PENDING]: { label: "Chờ xử lý", color: "#f59e0b" },
-  [Status.SUSPENDED]: { label: "Tạm dừng", color: "#ef4444" },
+  [Status.SUSPENDED]: { label: "Bị đình chỉ", color: "#ef4444" },
   [Status.ARCHIVED]: { label: "Đã lưu trữ", color: "#9ca3af" },
 };
 const canActivate = (status: any) => {

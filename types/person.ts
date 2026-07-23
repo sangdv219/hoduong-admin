@@ -67,6 +67,8 @@ export interface PersonSearchParams {
   q?: string;
   page?: number;
   limit?: number;
+  // status?: "suspended" | "pending" | "inactive" | "active";
+  status?: "suspended" | "pending" | "inactive" | "active";
 }
 
 export interface PaginatedResponse<T> {

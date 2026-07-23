@@ -25,6 +25,7 @@ export function usePersons() {
         q: search || undefined,
         page,
         limit,
+        status,
       }),
     placeholderData: (prev) => prev,
   });

@@ -14,6 +14,7 @@ function buildSearchQuery(params: PersonSearchParams): string {
   if (params.q) query.set("q", params.q);
   if (params.page) query.set("page", String(params.page));
   if (params.limit) query.set("limit", String(params.limit));
+  if (params.status) query.set("status", String(params.status));
 
   const qs = query.toString();
   return qs ? `?${qs}` : "";

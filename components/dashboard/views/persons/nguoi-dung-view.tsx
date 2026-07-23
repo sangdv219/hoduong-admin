@@ -26,7 +26,7 @@ export function NguoiDungView() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [localSearch, setLocalSearch] = useState("");
 
-  const { search, page, limit, setSearch, setPage, reset } =
+  const { search, page, limit, status, setSearch, setPage, reset, setStatus } =
     usePersonFilterStore();
   const { data, isLoading, isFetching, refetch, error } = usePersons();
   const deactivateMutation = useDeactivatePerson();
@@ -55,12 +55,21 @@ export function NguoiDungView() {
       activateMutation.variables,
       deactivateMutation.isPending,
       deactivateMutation.variables,
+      deleteMutation,
     ],
   );
 
   function handleSearch() {
     setSearch(localSearch);
+    setPage(1);
   }
+
+  const handleStatusChange = (
+    value?: "suspended" | "pending" | "inactive" | "active",
+  ) => {
+    setStatus(value);
+    setPage(1);
+  };
 
   function handleAdd() {
     setEditingId(null);
@@ -128,6 +137,7 @@ export function NguoiDungView() {
             onClear={() => {
               setLocalSearch("");
               setSearch("");
+              setPage(1);
             }}
           />
 
@@ -139,11 +149,15 @@ export function NguoiDungView() {
             placeholder="Trạng thái"
             style={{ width: 170, height: 34 }}
             allowClear
+            value={status}
+            onChange={handleStatusChange}
             options={[
               { value: "active", label: "Đang hoạt động" },
               { value: "inactive", label: "Ngừng hoạt động" },
+              { value: "pending", label: "Chờ xử lý" },
+              { value: "suspended", label: "Bị đình chỉ" },
             ]}
-            disabled
+            // disabled
           />
 
           <Tooltip title="Làm mới">
@@ -165,7 +179,7 @@ export function NguoiDungView() {
             />
           </Tooltip>
 
-          {(search || page > 1) && (
+          {(search || status || page > 1) && (
             <Button
               type="link"
               onClick={() => {
