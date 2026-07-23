@@ -8,6 +8,7 @@ import {
   useDeletePerson,
   usePersons,
 } from "@/hooks/use-persons";
+import { debounce } from "lodash";
 import { usePersonFilterStore } from "@/stores/use-person-filter-store";
 import { PersonSearchRecordDTO } from "@/types/person";
 import {
@@ -16,7 +17,7 @@ import {
   SearchOutlined,
 } from "@ant-design/icons";
 import { Button, Input, Select, Table, TableColumnsType, Tooltip } from "antd";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { getPersonColumns } from "./person-columns";
 import { PersonFormModal } from "./person-form-modal";
 
@@ -24,6 +25,7 @@ export function NguoiDungView() {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
+
   // const [localSearch, setLocalSearch] = useState("");
 
   const {
@@ -44,6 +46,22 @@ export function NguoiDungView() {
   const deactivateMutation = useDeactivatePerson();
   const activateMutation = useActivatePerson();
   const deleteMutation = useDeletePerson();
+  const [searchText, setSearchText] = useState(keyword);
+
+  const debounceSearch = useMemo(
+    () =>
+      debounce((value: string) => {
+        setKeyword(value);
+        setPage(1);
+      }, 500),
+    [setKeyword, setPage],
+  );
+
+  useEffect(() => {
+    return () => {
+      debounceSearch.cancel();
+    };
+  }, [debounceSearch]);
 
   const columns = useMemo(
     () =>
@@ -72,7 +90,6 @@ export function NguoiDungView() {
   );
 
   function handleSearch() {
-    // setKeyword(localSearch);
     setPage(1);
   }
 
@@ -82,14 +99,17 @@ export function NguoiDungView() {
     setStatus(value);
     setPage(1);
   };
+
   const handleGenderChange = (value?: number) => {
     setGender(value === undefined ? undefined : value);
     // setPage(1);
   };
+
   const handleLifeStatusChange = (value?: number) => {
     setLifeStatus(value === undefined ? undefined : value);
     // setPage(1);
   };
+
   function handleAdd() {
     setEditingId(null);
     setModalOpen(true);
@@ -146,15 +166,26 @@ export function NguoiDungView() {
           }}
         >
           <Input
-            value={keyword}
-            onChange={(e) => setKeyword(e.target.value)}
+            // value={keyword}
+            value={searchText}
+            // onChange={(e) => setKeyword(e.target.value)}
+            onChange={(e) => {
+              const value = e.target.value;
+              setSearchText(value);
+              debounceSearch(value);
+            }}
             onPressEnter={handleSearch}
             prefix={<SearchOutlined style={{ color: "#9ca3af" }} />}
             placeholder="Tìm theo tên, sdt, email người dùng..."
             style={{ width: 300, height: 34, borderRadius: 6, fontSize: 13 }}
             allowClear
+            // onClear={() => {
+            //   setKeyword("");
+            //   setPage(1);
+            // }}
             onClear={() => {
-              // setLocalSearch("");
+              setSearchText("");
+              debounceSearch.cancel();
               setKeyword("");
               setPage(1);
             }}
@@ -228,6 +259,7 @@ export function NguoiDungView() {
               onClick={() => {
                 reset();
                 // setLocalSearch("");
+                setSearchText("");
               }}
               style={{ fontSize: 13 }}
             >

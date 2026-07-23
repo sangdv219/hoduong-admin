@@ -73,7 +73,6 @@ export function PersonFormModal({
         year_of_death: values.year_of_death
           ? dayjs(values.year_of_death)
           : null,
-        // status: values.status === Status.ACTIVE,
       });
 
       form.validateFields({ validateOnly: false }).catch(() => {});
@@ -117,8 +116,6 @@ export function PersonFormModal({
       }
 
       if (isEdit && personId) {
-        console.log("values", values);
-
         const payload: UpdatePersonDTO = {
           fullname: values.fullname,
           roleId: "026e2174-aff3-4461-9f43-0e16c9a88f17",
@@ -179,7 +176,6 @@ export function PersonFormModal({
       cancelText="Hủy"
       confirmLoading={submitting}
       okButtonProps={{ disabled: !isFormValid }}
-      // forceRender // <-- THÊM THUỘC TÍNH NÀY: Ép buộc render form ngầm để khởi tạo kết nối form instance
       width={640}
     >
       <Spin spinning={isEdit && loadingDetail}>
