@@ -6,9 +6,9 @@ System for managing genealogy and family relationships.
 
 ## Core Features
 
-- Create person
-- Update person
-- Search person
+- Create user
+- Update user
+- Search user
 - Display family tree
 - Manage relationships
 
@@ -39,7 +39,7 @@ Redis Cache
 
 ## Main Modules
 
-- Person Module
+- user Module
 - Relationship Module
 - Family Module
 - Media Module

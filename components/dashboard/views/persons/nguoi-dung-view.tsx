@@ -3,15 +3,13 @@
 import { PageTitleBar } from "@/components/dashboard/shared/page-title-bar";
 import { GREEN_PRIMARY, SURFACE_BG } from "@/constants/colors";
 import {
-  useActivatePerson,
-  useDeactivatePerson,
-  useDeletePerson,
-  usePersons,
-  useSuspendPerson,
-} from "@/hooks/use-persons";
+  useActivateUser,
+  useDeactivateUser,
+  useDeleteUser,
+  useUsers,
+  useSuspendUser,
+} from "@/hooks/use-user";
 import { debounce } from "lodash";
-import { usePersonFilterStore } from "@/stores/use-person-filter-store";
-import { PersonSearchRecordDTO } from "@/types/person";
 import {
   PlusOutlined,
   ReloadOutlined,
@@ -19,8 +17,10 @@ import {
 } from "@ant-design/icons";
 import { Button, Input, Select, Table, TableColumnsType, Tooltip } from "antd";
 import { useEffect, useMemo, useState } from "react";
-import { getPersonColumns } from "./person-columns";
-import { PersonFormModal } from "./person-form-modal";
+import { getUserColumns } from "./user-columns";
+import { UserFormModal } from "./user-form-modal";
+import { useUserFilterStore } from "@/stores/use-user-filter-store";
+import { UserSearchRecordDTO } from "@/types/user";
 
 export function NguoiDungView() {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
@@ -40,12 +40,12 @@ export function NguoiDungView() {
     setStatus,
     setGender,
     setLifeStatus,
-  } = usePersonFilterStore();
-  const { data, isLoading, isFetching, refetch, error } = usePersons();
-  const deactivateMutation = useDeactivatePerson();
-  const activateMutation = useActivatePerson();
-  const deleteMutation = useDeletePerson();
-  const suspendMutation = useSuspendPerson();
+  } = useUserFilterStore();
+  const { data, isLoading, isFetching, refetch, error } = useUsers();
+  const deactivateMutation = useDeactivateUser();
+  const activateMutation = useActivateUser();
+  const deleteMutation = useDeleteUser();
+  const suspendMutation = useSuspendUser();
   const [searchText, setSearchText] = useState(keyword);
 
   const debounceSearch = useMemo(
@@ -65,7 +65,7 @@ export function NguoiDungView() {
 
   const columns = useMemo(
     () =>
-      getPersonColumns({
+      getUserColumns({
         onEdit: (id) => {
           setEditingId(id);
           setModalOpen(true);
@@ -298,9 +298,9 @@ export function NguoiDungView() {
               onChange: (keys) => setSelectedRowKeys(keys),
             }}
             columns={
-              columns as unknown as TableColumnsType<PersonSearchRecordDTO>
+              columns as unknown as TableColumnsType<UserSearchRecordDTO>
             }
-            dataSource={data?.items ?? ([] as PersonSearchRecordDTO[])}
+            dataSource={data?.items ?? ([] as UserSearchRecordDTO[])}
             loading={isLoading}
             pagination={{
               current: page,
@@ -325,9 +325,9 @@ export function NguoiDungView() {
           />
         </div>
       </div>
-      <PersonFormModal
+      <UserFormModal
         open={modalOpen}
-        personId={editingId}
+        userId={editingId}
         onClose={handleCloseModal}
       />
     </>

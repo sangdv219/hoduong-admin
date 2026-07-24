@@ -79,9 +79,9 @@ Response
 "updatedAt": "2026-06-20T09:30:00.000Z"
 }
 
-# Person APIs
+# user APIs
 
-# Create Person
+# Create user
 
 POST /user-admin
 
@@ -104,7 +104,7 @@ Response
 "createdAt": "2026-06-20T09:35:00.000Z"
 }
 
-# Get Person
+# Get user
 
 GET /user-admin/{id}
 
@@ -125,7 +125,7 @@ Response
 "status": true
 }
 
-# Update Person
+# Update user
 
 PATCH /user-admin/{id}
 
@@ -147,7 +147,7 @@ Response
 "updatedAt": "2026-06-20T09:40:00.000Z"
 }
 
-# Search Person
+# Search user
 
 GET /user-admin?q=duong&page=1&limit=20
 

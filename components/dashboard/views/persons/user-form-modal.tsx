@@ -1,20 +1,16 @@
 "use client";
 
 import { GENDER_OPTIONS, Status, STATUS_OPTIONS } from "@/constants/api";
-import {
-  useCreatePerson,
-  usePersonDetail,
-  useUpdatePerson,
-} from "@/hooks/use-persons";
-import type { CreatePersonDTO, UpdatePersonDTO } from "@/types/person";
-import { personToFormValues } from "@/utils/person";
+import { useCreateUser, useUpdateUser, useUserDetail } from "@/hooks/use-user";
+import { CreateUserDTO, UpdateUserDTO } from "@/types/user";
+import { userToFormValues } from "@/utils/user";
 import { DatePicker, Form, Input, Modal, Select, Spin, Switch } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 
-interface PersonFormModalProps {
+interface UserFormModalProps {
   open: boolean;
-  personId: string | null;
+  userId: string | null;
   onClose: () => void;
 }
 
@@ -41,21 +37,17 @@ function useFormValid(form: any, open: boolean, loading: boolean) {
   return submittable;
 }
 
-export function PersonFormModal({
-  open,
-  personId,
-  onClose,
-}: PersonFormModalProps) {
+export function UserFormModal({ open, userId, onClose }: UserFormModalProps) {
   const [form] = Form.useForm();
-  const isEdit = !!personId;
+  const isEdit = !!userId;
   const currentStatus = Form.useWatch("life_status", form);
-  const { data: person, isLoading: loadingDetail } = usePersonDetail(
-    open && personId ? personId : null,
+  const { data: user, isLoading: loadingDetail } = useUserDetail(
+    open && userId ? userId : null,
   );
 
   const isFormValid = useFormValid(form, open, loadingDetail);
-  const createMutation = useCreatePerson();
-  const updateMutation = useUpdatePerson();
+  const createMutation = useCreateUser();
+  const updateMutation = useUpdateUser();
 
   const submitting = createMutation.isPending || updateMutation.isPending;
 
@@ -65,8 +57,8 @@ export function PersonFormModal({
     // Xóa dữ liệu cũ của lần bật trước đó để tránh lag data
     form.resetFields();
 
-    if (isEdit && person) {
-      const values = personToFormValues(person);
+    if (isEdit && user) {
+      const values = userToFormValues(user);
       form.setFieldsValue({
         ...values,
         birth_date: values.birth_date ? dayjs(values.birth_date) : null,
@@ -92,7 +84,7 @@ export function PersonFormModal({
       });
       form.validateFields({ validateOnly: true }).catch(() => {});
     }
-  }, [open, isEdit, person, form]);
+  }, [open, isEdit, user, form]);
 
   async function handleSubmit() {
     try {
@@ -115,8 +107,8 @@ export function PersonFormModal({
         age = calculatedAge < 0 ? 0 : calculatedAge;
       }
 
-      if (isEdit && personId) {
-        const payload: UpdatePersonDTO = {
+      if (isEdit && userId) {
+        const payload: UpdateUserDTO = {
           fullname: values.fullname,
           roleId: "026e2174-aff3-4461-9f43-0e16c9a88f17",
           other_name: values.other_name,
@@ -134,9 +126,9 @@ export function PersonFormModal({
           address: values.address || null,
           biography: values.biography || null,
         };
-        await updateMutation.mutateAsync({ id: personId, payload });
+        await updateMutation.mutateAsync({ id: userId, payload });
       } else {
-        const payload: CreatePersonDTO = {
+        const payload: CreateUserDTO = {
           email: values.email,
           fullname: values.fullname,
           password: values.password,

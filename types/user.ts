@@ -1,6 +1,6 @@
-import { PersonGender, PersonStatus, Status } from "@/constants/api";
+import { UserGender, UserStatus, Status } from "@/constants/api";
 
-export interface PersonDTO {
+export interface UserDTO {
   id: string;
   email: string;
   fullname: string;
@@ -8,22 +8,22 @@ export interface PersonDTO {
   roleId: string;
   other_name?: string | null;
   age?: number | null;
-  gender: PersonGender;
+  gender: UserGender;
   phone?: string | null;
   birth_date?: Date | null;
   year_of_death?: Date | null;
   burial_place?: string | null;
   address?: string | null;
   biography?: string | null;
-  life_status: PersonStatus;
+  life_status: UserStatus;
   status: Status;
   createdAt?: string;
   updatedAt?: string;
 }
 
-export interface PersonSearchRecordDTO {
+export interface UserSearchRecordDTO {
   records: {
-    items: PersonDTO[] | null;
+    items: UserDTO[] | null;
     total: number;
     page: number;
     limit: number;
@@ -31,13 +31,13 @@ export interface PersonSearchRecordDTO {
   };
 }
 
-export interface CreatePersonDTO {
+export interface CreateUserDTO {
   email?: string | null;
   fullname?: string;
   roleId: string;
   password: string;
   other_name?: string | null;
-  gender: PersonGender;
+  gender: UserGender;
   phone?: string | null;
   birth_date?: Date | string | null;
   year_of_death?: Date | string | null;
@@ -45,25 +45,25 @@ export interface CreatePersonDTO {
   age: number | null;
   address?: string | null;
   biography?: string | null;
-  life_status: PersonStatus;
+  life_status: UserStatus;
 }
 
-export interface UpdatePersonDTO {
+export interface UpdateUserDTO {
   fullname: string;
   roleId: string;
   other_name: string | null;
-  gender: PersonGender;
+  gender: UserGender;
   phone: string | null;
   age: number | null;
   birth_date?: Date | string | null;
-  life_status: PersonStatus;
+  life_status: UserStatus;
   year_of_death?: Date | string | null;
   burial_place?: string | null;
   address?: string | null;
   biography?: string | null;
 }
 
-export interface PersonSearchParams {
+export interface UserSearchParams {
   keyword?: string;
   q?: string;
   page?: number;
@@ -78,14 +78,14 @@ export interface PaginatedResponse<T> {
   totalRecord: number;
 }
 
-export interface PersonFormValues {
+export interface UserFormValues {
   email?: string | null;
   fullname?: string;
   password: string;
   roleId: string;
   other_name?: string | null;
   age?: number | null;
-  gender: PersonGender;
+  gender: UserGender;
   phone?: string | null;
   birth_date?: Date | null;
   year_of_death?: Date | null;
@@ -93,5 +93,5 @@ export interface PersonFormValues {
   address?: string | null;
   biography?: string | null;
   status?: Status;
-  life_status: PersonStatus;
+  life_status: UserStatus;
 }

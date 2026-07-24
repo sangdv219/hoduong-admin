@@ -1,15 +1,15 @@
 import { Status } from "@/constants/api";
 import { apiClient } from "@/lib/api-client";
-import type {
-  CreatePersonDTO,
+import {
+  CreateUserDTO,
   PaginatedResponse,
-  PersonDTO,
-  PersonSearchParams,
-  PersonSearchRecordDTO,
-  UpdatePersonDTO,
-} from "@/types/person";
+  UpdateUserDTO,
+  UserDTO,
+  UserSearchParams,
+  UserSearchRecordDTO,
+} from "@/types/user";
 
-function buildSearchQuery(params: PersonSearchParams): string {
+function buildSearchQuery(params: UserSearchParams): string {
   const query = new URLSearchParams();
   // if (params.q !== undefined && params.q !== "") query.set("q", params.q);
   if (params.keyword !== undefined)
@@ -24,33 +24,33 @@ function buildSearchQuery(params: PersonSearchParams): string {
   const qs = query.toString();
   return qs ? `?${qs}` : "";
 }
-export const personService = {
-  search(params: PersonSearchParams) {
-    return apiClient<PaginatedResponse<PersonSearchRecordDTO>>(
+export const userService = {
+  search(params: UserSearchParams) {
+    return apiClient<PaginatedResponse<UserSearchRecordDTO>>(
       `/user-admin${buildSearchQuery(params)}`,
     );
   },
 
   getById(id: string) {
-    return apiClient<PersonDTO>(`/user-admin/${id}`);
+    return apiClient<UserDTO>(`/user-admin/${id}`);
   },
 
-  create(payload: CreatePersonDTO) {
-    return apiClient<PersonDTO>("/user-admin", {
+  create(payload: CreateUserDTO) {
+    return apiClient<UserDTO>("/user-admin", {
       method: "POST",
       body: payload,
     });
   },
 
-  update(id: string, payload: UpdatePersonDTO) {
-    return apiClient<PersonDTO>(`/user-admin/${id}`, {
+  update(id: string, payload: UpdateUserDTO) {
+    return apiClient<UserDTO>(`/user-admin/${id}`, {
       method: "PATCH",
       body: payload,
     });
   },
 
   changeUserStatus(id: string, payload: string) {
-    return apiClient<PersonDTO>(`/user-admin/changeUserStatus/${id}`, {
+    return apiClient<UserDTO>(`/user-admin/changeUserStatus/${id}`, {
       method: "PATCH",
       body: { status: payload },
     });

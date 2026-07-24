@@ -1,7 +1,7 @@
 "use client";
 
-import type { PersonDTO } from "@/types/person";
-import { formatGender } from "@/utils/person";
+import { UserDTO } from "@/types/user";
+import { formatGender } from "@/utils/user";
 import {
   DeleteOutlined,
   EditOutlined,
@@ -12,7 +12,7 @@ import {
 import type { TableColumnsType } from "antd";
 import { Button, Popconfirm, Space, Tooltip } from "antd";
 
-interface PersonColumnHandlers {
+interface UserColumnHandlers {
   onEdit: (id: string) => void;
   onDeactivate: (id: string) => void;
   onActivate: (id: string) => void;
@@ -48,9 +48,9 @@ const canDeactivate = (status: any) => status === Status.ACTIVE;
 const canSuspend = (status: any) =>
   [Status.ACTIVE, Status.INACTIVE, Status.PENDING].includes(status);
 
-export function getPersonColumns(
-  handlers: PersonColumnHandlers,
-): TableColumnsType<PersonDTO> {
+export function getUserColumns(
+  handlers: UserColumnHandlers,
+): TableColumnsType<UserDTO> {
   return [
     {
       title: "",
@@ -165,7 +165,7 @@ export function getPersonColumns(
       dataIndex: "gender",
       key: "gender",
       width: 100,
-      render: (gender: PersonDTO["gender"]) => (
+      render: (gender: UserDTO["gender"]) => (
         <span style={{ color: "#374151" }}>{formatGender(gender)}</span>
       ),
     },

@@ -5,7 +5,7 @@ vi.mock("@/lib/api-client", () => ({
 }));
 
 import { apiClient } from "@/lib/api-client";
-import { personService } from "@/services/person.service";
+import { personService } from "@/services/user.service";
 
 describe("personService", () => {
   beforeEach(() => {
@@ -22,7 +22,7 @@ describe("personService", () => {
     );
   });
 
-  it("create posts person payload", async () => {
+  it("create posts user payload", async () => {
     const payload = {
       familyId: "family-1",
       firstName: "Nguyen",

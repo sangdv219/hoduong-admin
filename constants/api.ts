@@ -1,6 +1,6 @@
 export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "/api/v1";
 
-export const PERSON_QUERY_KEYS = {
+export const USER_QUERY_KEYS = {
   all: ["user-admin"] as const,
   list: (params: Record<string, unknown>) =>
     ["user-admin", "list", params] as const,
@@ -17,9 +17,9 @@ export const STATUS_OPTIONS = [
   { value: 1, label: "Còn sống" },
 ];
 
-export type PersonGender = 0 | 1;
+export type UserGender = 0 | 1;
 
-export type PersonStatus = 0 | 1;
+export type UserStatus = 0 | 1;
 
 export enum Status {
   ACTIVE = "active",

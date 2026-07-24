@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-interface PersonFilterState {
+interface UserFilterState {
   keyword?: string;
   page: number;
   limit: number;
@@ -17,7 +17,7 @@ interface PersonFilterState {
 
 const DEFAULT_LIMIT = 15;
 
-export const usePersonFilterStore = create<PersonFilterState>((set) => ({
+export const useUserFilterStore = create<UserFilterState>((set) => ({
   keyword: undefined,
   page: 1,
   limit: DEFAULT_LIMIT,

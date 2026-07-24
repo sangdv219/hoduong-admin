@@ -1,10 +1,10 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { App } from "antd";
-import { PERSON_QUERY_KEYS, Status } from "@/constants/api";
+import { USER_QUERY_KEYS, Status } from "@/constants/api";
 import { ApiError } from "@/lib/api-errors";
-import { personService } from "@/services/person.service";
-import { usePersonFilterStore } from "@/stores/use-person-filter-store";
-import type { CreatePersonDTO, UpdatePersonDTO } from "@/types/person";
+import { userService } from "@/services/user.service";
+import type { CreateUserDTO, UpdateUserDTO } from "@/types/user";
+import { useUserFilterStore } from "@/stores/use-user-filter-store";
 
 function handleMutationError(
   error: unknown,
@@ -16,12 +16,12 @@ function handleMutationError(
   messageApi.error(msg);
 }
 
-export function usePersons() {
+export function useUsers() {
   const { keyword, page, limit, status, gender, life_status } =
-    usePersonFilterStore();
+    useUserFilterStore();
 
   return useQuery({
-    queryKey: PERSON_QUERY_KEYS.list({
+    queryKey: USER_QUERY_KEYS.list({
       keyword,
       page,
       limit,
@@ -30,7 +30,7 @@ export function usePersons() {
       life_status,
     }),
     queryFn: () =>
-      personService.search({
+      userService.search({
         keyword: keyword || undefined,
         page,
         limit,
@@ -42,103 +42,102 @@ export function usePersons() {
   });
 }
 
-export function usePersonDetail(id: string | null) {
+export function useUserDetail(id: string | null) {
   return useQuery({
-    queryKey: PERSON_QUERY_KEYS.detail(id ?? ""),
-    queryFn: () => personService.getById(id!),
+    queryKey: USER_QUERY_KEYS.detail(id ?? ""),
+    queryFn: () => userService.getById(id!),
     enabled: !!id,
   });
 }
 
-export function useCreatePerson() {
+export function useCreateUser() {
   const queryClient = useQueryClient();
   const { message } = App.useApp();
 
   return useMutation({
-    mutationFn: (payload: CreatePersonDTO) => personService.create(payload),
+    mutationFn: (payload: CreateUserDTO) => userService.create(payload),
     onSuccess: () => {
       message.success("Thêm người dùng thành công");
-      queryClient.invalidateQueries({ queryKey: PERSON_QUERY_KEYS.all });
+      queryClient.invalidateQueries({ queryKey: USER_QUERY_KEYS.all });
     },
     onError: (error) =>
       handleMutationError(error, "Không thể thêm người dùng", message),
   });
 }
 
-export function useUpdatePerson() {
+export function useUpdateUser() {
   const queryClient = useQueryClient();
   const { message } = App.useApp();
 
   return useMutation({
-    mutationFn: ({ id, payload }: { id: string; payload: UpdatePersonDTO }) =>
-      personService.update(id, payload),
+    mutationFn: ({ id, payload }: { id: string; payload: UpdateUserDTO }) =>
+      userService.update(id, payload),
     onSuccess: (_, { id }) => {
       message.success("Cập nhật người dùng thành công");
-      queryClient.invalidateQueries({ queryKey: PERSON_QUERY_KEYS.all });
-      queryClient.invalidateQueries({ queryKey: PERSON_QUERY_KEYS.detail(id) });
+      queryClient.invalidateQueries({ queryKey: USER_QUERY_KEYS.all });
+      queryClient.invalidateQueries({ queryKey: USER_QUERY_KEYS.detail(id) });
     },
     onError: (error) =>
       handleMutationError(error, "Không thể cập nhật người dùng", message),
   });
 }
 
-export function useDeactivatePerson() {
+export function useDeactivateUser() {
   const queryClient = useQueryClient();
   const { message } = App.useApp();
 
   return useMutation({
     mutationFn: (id: string) =>
-      personService.changeUserStatus(id, Status.INACTIVE),
+      userService.changeUserStatus(id, Status.INACTIVE),
     onSuccess: () => {
       message.success("Đã vô hiệu hóa người dùng");
-      queryClient.invalidateQueries({ queryKey: PERSON_QUERY_KEYS.all });
+      queryClient.invalidateQueries({ queryKey: USER_QUERY_KEYS.all });
     },
     onError: (error) =>
       handleMutationError(error, "Không thể vô hiệu hóa người dùng", message),
   });
 }
 
-export function useDeletePerson() {
+export function useDeleteUser() {
   const queryClient = useQueryClient();
   const { message } = App.useApp();
 
   return useMutation({
     mutationFn: (id: string) =>
-      personService.changeUserStatus(id, Status.ARCHIVED),
+      userService.changeUserStatus(id, Status.ARCHIVED),
     onSuccess: () => {
       message.success("Đã xoá người dùng");
-      queryClient.invalidateQueries({ queryKey: PERSON_QUERY_KEYS.all });
+      queryClient.invalidateQueries({ queryKey: USER_QUERY_KEYS.all });
     },
     onError: (error) =>
       handleMutationError(error, "Không thể xóa người dùng", message),
   });
 }
 
-export function useActivatePerson() {
+export function useActivateUser() {
   const queryClient = useQueryClient();
   const { message } = App.useApp();
   return useMutation({
-    mutationFn: (id: string) =>
-      personService.changeUserStatus(id, Status.ACTIVE),
+    mutationFn: (id: string) => userService.changeUserStatus(id, Status.ACTIVE),
     onSuccess: () => {
       message.success("Đã kích hoạt người dùng");
-      queryClient.invalidateQueries({ queryKey: PERSON_QUERY_KEYS.all });
+      queryClient.invalidateQueries({ queryKey: USER_QUERY_KEYS.all });
     },
     onError: (error) =>
       handleMutationError(error, "Không thể kích hoạt người dùng", message),
   });
 }
 
-export function useSuspendPerson() {
+export function useSuspendUser() {
   const queryClient = useQueryClient();
   const { message } = App.useApp();
 
   return useMutation({
     mutationFn: (id: string) =>
-      personService.changeUserStatus(id, Status.SUSPENDED),
+      userService.changeUserStatus(id, Status.SUSPENDED),
     onSuccess: () => {
       message.success("Đã đình chỉ người dùng");
-      queryClient.invalidateQueries({ queryKey: PERSON_QUERY_KEYS.all });
+      queryClient.invalidateQueries({ queryKey: USER_QUERY_KEYS.all });
     },
     onError: (error) =>
       handleMutationError(error, "Không thể đình chỉ người dùng", message),
