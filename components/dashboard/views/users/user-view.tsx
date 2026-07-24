@@ -22,7 +22,7 @@ import { UserFormModal } from "./user-form-modal";
 import { useUserFilterStore } from "@/stores/use-user-filter-store";
 import { UserSearchRecordDTO } from "@/types/user";
 
-export function NguoiDungView() {
+export function UserView() {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);

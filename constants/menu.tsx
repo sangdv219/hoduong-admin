@@ -46,7 +46,7 @@ export const siderMenuItems: MenuItem[] = [
             icon: <BranchesOutlined />,
           },
           {
-            key: "nguoi-dung",
+            key: "user",
             label: "Người dùng",
             icon: <TeamOutlined />,
           },

@@ -49,7 +49,7 @@ export default function DashboardShell() {
                 setActiveTab={nav.setActiveTab}
                 systemSubView={nav.systemSubView}
                 setSystemSubView={nav.setSystemSubView}
-                onNavigateHome={() => nav.setCurrentView("nguoi-dung")}
+                onNavigateHome={() => nav.setCurrentView("user")}
               />
             </Content>
           </Layout>

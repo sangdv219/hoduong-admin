@@ -17,7 +17,7 @@ export const VIEW_META: Record<ViewKey, ViewMeta> = {
     ],
     title: "KHÁCH HÀNG THÀNH VIÊN",
   },
-  "nguoi-dung": {
+  user: {
     breadcrumb: [
       { label: "Quản trị website" },
       { label: "Gia phả" },
