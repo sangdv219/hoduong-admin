@@ -7,6 +7,7 @@ import {
   EditOutlined,
   PauseCircleOutlined,
   PlayCircleOutlined,
+  CloseCircleOutlined,
 } from "@ant-design/icons";
 import type { TableColumnsType } from "antd";
 import { Button, Popconfirm, Space, Tooltip } from "antd";
@@ -16,8 +17,10 @@ interface PersonColumnHandlers {
   onDeactivate: (id: string) => void;
   onActivate: (id: string) => void;
   onDelete: (id: string) => void;
+  onSuspend: (id: string) => void;
   activatingId?: string | null;
   deactivatingId?: string | null;
+  suspendingId?: string | null;
 }
 
 const Status = {
@@ -37,15 +40,13 @@ const STATUS_CONFIG: Record<StatusType, { label: string; color: string }> = {
   [Status.SUSPENDED]: { label: "Bị đình chỉ", color: "#ef4444" },
   [Status.ARCHIVED]: { label: "Đã lưu trữ", color: "#9ca3af" },
 };
-const canActivate = (status: any) => {
-  return (
-    status === Status.INACTIVE ||
-    status === Status.PENDING ||
-    status === Status.SUSPENDED
-  );
-};
+const canActivate = (status: any) =>
+  [Status.INACTIVE, Status.PENDING, Status.SUSPENDED].includes(status);
 
-const canInActivate = (status: any) => status === Status.ACTIVE;
+const canDeactivate = (status: any) => status === Status.ACTIVE;
+
+const canSuspend = (status: any) =>
+  [Status.ACTIVE, Status.INACTIVE, Status.PENDING].includes(status);
 
 export function getPersonColumns(
   handlers: PersonColumnHandlers,
@@ -66,7 +67,7 @@ export function getPersonColumns(
               style={{ color: "#1a7a48" }}
             />
           </Tooltip>
-          {canInActivate(record.status) && (
+          {canDeactivate(record.status) && (
             <Popconfirm
               title="Tạm dừng người dùng?"
               description="Người dùng sẽ bị đánh dấu không hoạt động."
@@ -97,6 +98,26 @@ export function getPersonColumns(
                 style={{ color: "#22c55e" }}
               />
             </Tooltip>
+          )}
+          {canSuspend(record.status) && (
+            <Popconfirm
+              title="Đình chỉ người dùng?"
+              description="Người dùng sẽ bị đình chỉ cho đến khi được kích hoạt lại."
+              okText="Đình chỉ"
+              cancelText="Hủy"
+              okButtonProps={{ danger: true }}
+              onConfirm={() => handlers.onSuspend(record.id)}
+            >
+              <Tooltip title="Đình chỉ">
+                <Button
+                  type="text"
+                  size="small"
+                  icon={<CloseCircleOutlined />}
+                  loading={handlers.suspendingId === record.id}
+                  style={{ color: "#ef4444" }}
+                />
+              </Tooltip>
+            </Popconfirm>
           )}
         </Space>
       ),

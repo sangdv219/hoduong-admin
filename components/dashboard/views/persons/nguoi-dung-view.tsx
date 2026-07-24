@@ -7,6 +7,7 @@ import {
   useDeactivatePerson,
   useDeletePerson,
   usePersons,
+  useSuspendPerson,
 } from "@/hooks/use-persons";
 import { debounce } from "lodash";
 import { usePersonFilterStore } from "@/stores/use-person-filter-store";
@@ -26,8 +27,6 @@ export function NguoiDungView() {
   const [modalOpen, setModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
 
-  // const [localSearch, setLocalSearch] = useState("");
-
   const {
     keyword,
     page,
@@ -46,6 +45,7 @@ export function NguoiDungView() {
   const deactivateMutation = useDeactivatePerson();
   const activateMutation = useActivatePerson();
   const deleteMutation = useDeletePerson();
+  const suspendMutation = useSuspendPerson();
   const [searchText, setSearchText] = useState(keyword);
 
   const debounceSearch = useMemo(
@@ -73,6 +73,7 @@ export function NguoiDungView() {
         onDelete: (id) => deleteMutation.mutate(id),
         onDeactivate: (id) => deactivateMutation.mutate(id),
         onActivate: (id) => activateMutation.mutate(id),
+        onSuspend: (id) => suspendMutation.mutate(id),
         activatingId: activateMutation.isPending
           ? activateMutation.variables
           : null,
@@ -85,7 +86,10 @@ export function NguoiDungView() {
       activateMutation.variables,
       deactivateMutation.isPending,
       deactivateMutation.variables,
-      deleteMutation,
+      deleteMutation.isPending,
+      deleteMutation.variables,
+      suspendMutation.isPending,
+      suspendMutation.variables,
     ],
   );
 
@@ -166,9 +170,7 @@ export function NguoiDungView() {
           }}
         >
           <Input
-            // value={keyword}
             value={searchText}
-            // onChange={(e) => setKeyword(e.target.value)}
             onChange={(e) => {
               const value = e.target.value;
               setSearchText(value);
@@ -179,10 +181,6 @@ export function NguoiDungView() {
             placeholder="Tìm theo tên, sdt, email người dùng..."
             style={{ width: 300, height: 34, borderRadius: 6, fontSize: 13 }}
             allowClear
-            // onClear={() => {
-            //   setKeyword("");
-            //   setPage(1);
-            // }}
             onClear={() => {
               setSearchText("");
               debounceSearch.cancel();
@@ -207,7 +205,6 @@ export function NguoiDungView() {
               { value: "pending", label: "Chờ xử lý" },
               { value: "suspended", label: "Bị đình chỉ" },
             ]}
-            // disabled
           />
           <Select
             placeholder="Giới tính"
@@ -219,7 +216,6 @@ export function NguoiDungView() {
               { value: 0, label: "Nam" },
               { value: 1, label: "Nữ" },
             ]}
-            // disabled
           />
           <Select
             placeholder="Tình trạng"

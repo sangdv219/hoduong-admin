@@ -49,24 +49,10 @@ export const personService = {
     });
   },
 
-  deactivate(id: string) {
-    return apiClient<PersonDTO>(`/user-admin/${id}`, {
+  changeUserStatus(id: string, payload: string) {
+    return apiClient<PersonDTO>(`/user-admin/changeUserStatus/${id}`, {
       method: "PATCH",
-      body: { status: Status.INACTIVE },
-    });
-  },
-
-  delete(id: string) {
-    return apiClient<PersonDTO>(`/user-admin/${id}`, {
-      method: "PATCH",
-      body: { status: Status.ARCHIVED, deleted_at: new Date() },
-    });
-  },
-
-  activate(id: string) {
-    return apiClient<PersonDTO>(`/user-admin/${id}`, {
-      method: "PATCH",
-      body: { status: Status.ACTIVE },
+      body: { status: payload },
     });
   },
 };

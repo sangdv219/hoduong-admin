@@ -1,6 +1,6 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { App } from "antd";
-import { PERSON_QUERY_KEYS } from "@/constants/api";
+import { PERSON_QUERY_KEYS, Status } from "@/constants/api";
 import { ApiError } from "@/lib/api-errors";
 import { personService } from "@/services/person.service";
 import { usePersonFilterStore } from "@/stores/use-person-filter-store";
@@ -87,7 +87,8 @@ export function useDeactivatePerson() {
   const { message } = App.useApp();
 
   return useMutation({
-    mutationFn: (id: string) => personService.deactivate(id),
+    mutationFn: (id: string) =>
+      personService.changeUserStatus(id, Status.INACTIVE),
     onSuccess: () => {
       message.success("Đã vô hiệu hóa người dùng");
       queryClient.invalidateQueries({ queryKey: PERSON_QUERY_KEYS.all });
@@ -102,7 +103,8 @@ export function useDeletePerson() {
   const { message } = App.useApp();
 
   return useMutation({
-    mutationFn: (id: string) => personService.delete(id),
+    mutationFn: (id: string) =>
+      personService.changeUserStatus(id, Status.ARCHIVED),
     onSuccess: () => {
       message.success("Đã xoá người dùng");
       queryClient.invalidateQueries({ queryKey: PERSON_QUERY_KEYS.all });
@@ -115,14 +117,30 @@ export function useDeletePerson() {
 export function useActivatePerson() {
   const queryClient = useQueryClient();
   const { message } = App.useApp();
-
   return useMutation({
-    mutationFn: (id: string) => personService.activate(id),
+    mutationFn: (id: string) =>
+      personService.changeUserStatus(id, Status.ACTIVE),
     onSuccess: () => {
       message.success("Đã kích hoạt người dùng");
       queryClient.invalidateQueries({ queryKey: PERSON_QUERY_KEYS.all });
     },
     onError: (error) =>
       handleMutationError(error, "Không thể kích hoạt người dùng", message),
+  });
+}
+
+export function useSuspendPerson() {
+  const queryClient = useQueryClient();
+  const { message } = App.useApp();
+
+  return useMutation({
+    mutationFn: (id: string) =>
+      personService.changeUserStatus(id, Status.SUSPENDED),
+    onSuccess: () => {
+      message.success("Đã đình chỉ người dùng");
+      queryClient.invalidateQueries({ queryKey: PERSON_QUERY_KEYS.all });
+    },
+    onError: (error) =>
+      handleMutationError(error, "Không thể đình chỉ người dùng", message),
   });
 }
