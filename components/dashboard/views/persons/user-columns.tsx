@@ -34,8 +34,8 @@ const Status = {
 type StatusType = (typeof Status)[keyof typeof Status];
 
 const STATUS_CONFIG: Record<StatusType, { label: string; color: string }> = {
-  [Status.ACTIVE]: { label: "Kích hoạt", color: "#10b981" },
-  [Status.INACTIVE]: { label: "Ngừng hoạt động", color: "#6b7280" },
+  [Status.ACTIVE]: { label: "Đang hoạt động", color: "#16a34a" },
+  [Status.INACTIVE]: { label: "Ngừng hoạt động", color: "#dc2626" },
   [Status.PENDING]: { label: "Chờ xử lý", color: "#f59e0b" },
   [Status.SUSPENDED]: { label: "Bị đình chỉ", color: "#ef4444" },
   [Status.ARCHIVED]: { label: "Đã lưu trữ", color: "#9ca3af" },
@@ -62,7 +62,7 @@ export function getUserColumns(
             <Button
               type="text"
               size="small"
-              icon={<EditOutlined />}
+              icon={<EditOutlined style={{ fontSize: 20 }} />}
               onClick={() => handlers.onEdit(record.id)}
               style={{ color: "#1a7a48" }}
             />
@@ -80,7 +80,7 @@ export function getUserColumns(
                 <Button
                   type="text"
                   size="small"
-                  icon={<PauseCircleOutlined />}
+                  icon={<PauseCircleOutlined style={{ fontSize: 20 }} />}
                   loading={handlers.deactivatingId === record.id}
                   style={{ color: "#f59e0b" }}
                 />
@@ -92,7 +92,7 @@ export function getUserColumns(
               <Button
                 type="text"
                 size="small"
-                icon={<PlayCircleOutlined />}
+                icon={<PlayCircleOutlined style={{ fontSize: 20 }} />}
                 loading={handlers.activatingId === record.id}
                 onClick={() => handlers.onActivate(record.id)}
                 style={{ color: "#22c55e" }}
@@ -112,7 +112,7 @@ export function getUserColumns(
                 <Button
                   type="text"
                   size="small"
-                  icon={<CloseCircleOutlined />}
+                  icon={<CloseCircleOutlined style={{ fontSize: 20 }} />}
                   loading={handlers.suspendingId === record.id}
                   style={{ color: "#ef4444" }}
                 />
@@ -198,7 +198,7 @@ export function getUserColumns(
         };
 
         return (
-          <span style={{ color: config.color, fontSize: 12 }}>
+          <span style={{ color: config.color, fontSize: 12, fontWeight: 600 }}>
             {config.label}
           </span>
         );
