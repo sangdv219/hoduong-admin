@@ -1,5 +1,6 @@
 "use client";
 
+import { ROLE_COLORS } from "@/constants/colors";
 import { UserDTO } from "@/types/user";
 import { formatGender } from "@/utils/user";
 import {
@@ -10,7 +11,7 @@ import {
   CloseCircleOutlined,
 } from "@ant-design/icons";
 import type { TableColumnsType } from "antd";
-import { Button, Popconfirm, Space, Tooltip } from "antd";
+import { Button, Popconfirm, Space, Tag, Tooltip } from "antd";
 
 interface UserColumnHandlers {
   onEdit: (id: string) => void;
@@ -195,9 +196,25 @@ export function getUserColumns(
       ),
     },
     {
+      title: "Vai trò",
+      dataIndex: "roles",
+      key: "roles",
+      render: (roles: { name: string }[]) => (
+        <Space size={[0, 4]} wrap>
+          {roles?.map((role, index) => {
+            const color = ROLE_COLORS[role.name] || "green";
+            return (
+              <Tag color={color} key={index} style={{ marginInlineEnd: 4 }}>
+                {role.name}
+              </Tag>
+            );
+          })}
+        </Space>
+      ),
+    },
+    {
       title: "Trạng thái",
       dataIndex: "status",
-      // sorter: true,
       key: "status",
       ellipsis: true,
       render: (status: StatusType) => {

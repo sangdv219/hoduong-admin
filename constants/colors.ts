@@ -13,3 +13,9 @@ export const GREEN_ACCENT = "#22c55e";
 export const HEADER_BG = "#ffffff";
 export const CONTENT_BG = "#f0f2f5";
 export const SURFACE_BG = "#ffffff";
+
+export const ROLE_COLORS: Record<string, string> = {
+  Admin: "volcano",
+  Supervisor: "geekblue",
+  // Manager: "purple",
+};
