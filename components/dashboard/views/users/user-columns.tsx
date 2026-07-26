@@ -50,6 +50,8 @@ const canSuspend = (status: any) =>
 
 export function getUserColumns(
   handlers: UserColumnHandlers,
+  sortField?: string,
+  sortOrder?: "ASC" | "DESC",
 ): TableColumnsType<UserDTO> {
   return [
     {
@@ -134,7 +136,6 @@ export function getUserColumns(
       title: "Tên khác",
       dataIndex: "other_name",
       key: "other_name",
-      width: 200,
       render: (other_name: string | null) => (
         <span style={{ fontWeight: 500, color: "#1a1a1a" }}>
           {other_name ?? "-"}
@@ -173,6 +174,8 @@ export function getUserColumns(
       title: "Tuổi",
       dataIndex: "age",
       key: "age",
+      sorter: true,
+      sortOrder: sortOrder === "ASC" ? "ascend" : "descend",
       width: 100,
       render: (age: number) => <span style={{ color: "#374151" }}>{age}</span>,
     },
@@ -189,6 +192,7 @@ export function getUserColumns(
     {
       title: "Trạng thái",
       dataIndex: "status",
+      // sorter: true,
       key: "status",
       ellipsis: true,
       render: (status: StatusType) => {
@@ -222,7 +226,7 @@ export function getUserColumns(
             type="text"
             size="small"
             danger
-            icon={<DeleteOutlined />}
+            icon={<DeleteOutlined style={{ fontSize: 20 }} />}
             loading={handlers.deactivatingId === record.id}
           />
         </Popconfirm>

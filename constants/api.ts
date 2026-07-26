@@ -19,7 +19,7 @@ export const STATUS_OPTIONS = [
 
 export type UserGender = 0 | 1;
 
-export type UserStatus = 0 | 1;
+export type LifeStatus = 0 | 1;
 
 export enum Status {
   ACTIVE = "active",

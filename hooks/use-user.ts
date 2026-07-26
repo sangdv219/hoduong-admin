@@ -16,10 +16,9 @@ function handleMutationError(
   messageApi.error(msg);
 }
 
-export function useUsers() {
+export function useUsers({ sortBy, sortOrder }: any) {
   const { keyword, page, limit, status, gender, life_status } =
     useUserFilterStore();
-
   return useQuery({
     queryKey: USER_QUERY_KEYS.list({
       keyword,
@@ -28,6 +27,8 @@ export function useUsers() {
       status,
       gender,
       life_status,
+      sortBy,
+      sortOrder,
     }),
     queryFn: () =>
       userService.search({
@@ -37,6 +38,8 @@ export function useUsers() {
         status,
         gender: gender ?? undefined,
         life_status: life_status ?? undefined,
+        sortBy,
+        sortOrder,
       }),
     placeholderData: (prev) => prev,
   });
@@ -88,7 +91,7 @@ export function useDeactivateUser() {
 
   return useMutation({
     mutationFn: (id: string) =>
-      userService.changeUserStatus(id, Status.INACTIVE),
+      userService.changeLifeStatus(id, Status.INACTIVE),
     onSuccess: () => {
       message.success("Đã vô hiệu hóa người dùng");
       queryClient.invalidateQueries({ queryKey: USER_QUERY_KEYS.all });
@@ -104,7 +107,7 @@ export function useDeleteUser() {
 
   return useMutation({
     mutationFn: (id: string) =>
-      userService.changeUserStatus(id, Status.ARCHIVED),
+      userService.changeLifeStatus(id, Status.ARCHIVED),
     onSuccess: () => {
       message.success("Đã xoá người dùng");
       queryClient.invalidateQueries({ queryKey: USER_QUERY_KEYS.all });
@@ -118,7 +121,7 @@ export function useActivateUser() {
   const queryClient = useQueryClient();
   const { message } = App.useApp();
   return useMutation({
-    mutationFn: (id: string) => userService.changeUserStatus(id, Status.ACTIVE),
+    mutationFn: (id: string) => userService.changeLifeStatus(id, Status.ACTIVE),
     onSuccess: () => {
       message.success("Đã kích hoạt người dùng");
       queryClient.invalidateQueries({ queryKey: USER_QUERY_KEYS.all });
@@ -134,7 +137,7 @@ export function useSuspendUser() {
 
   return useMutation({
     mutationFn: (id: string) =>
-      userService.changeUserStatus(id, Status.SUSPENDED),
+      userService.changeLifeStatus(id, Status.SUSPENDED),
     onSuccess: () => {
       message.success("Đã đình chỉ người dùng");
       queryClient.invalidateQueries({ queryKey: USER_QUERY_KEYS.all });

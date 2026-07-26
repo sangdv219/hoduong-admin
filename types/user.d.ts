@@ -1,4 +1,4 @@
-import { UserGender, UserStatus, Status } from "@/constants/api";
+import { UserGender, LifeStatus, Status } from "@/constants/api";
 
 export interface UserDTO {
   id: string;
@@ -15,7 +15,7 @@ export interface UserDTO {
   burial_place?: string | null;
   address?: string | null;
   biography?: string | null;
-  life_status: UserStatus;
+  life_status: LifeStatus;
   status: Status;
   createdAt?: string;
   updatedAt?: string;
@@ -45,7 +45,7 @@ export interface CreateUserDTO {
   age: number | null;
   address?: string | null;
   biography?: string | null;
-  life_status: UserStatus;
+  life_status: LifeStatus;
 }
 
 export interface UpdateUserDTO {
@@ -56,7 +56,7 @@ export interface UpdateUserDTO {
   phone: string | null;
   age: number | null;
   birth_date?: Date | string | null;
-  life_status: UserStatus;
+  life_status: LifeStatus;
   year_of_death?: Date | string | null;
   burial_place?: string | null;
   address?: string | null;
@@ -71,6 +71,8 @@ export interface UserSearchParams {
   status?: "suspended" | "pending" | "inactive" | "active";
   gender?: number;
   life_status?: number;
+  sortBy?: string;
+  sortOrder?: "ASC" | "DESC";
 }
 
 export interface PaginatedResponse<T> {
@@ -93,5 +95,5 @@ export interface UserFormValues {
   address?: string | null;
   biography?: string | null;
   status?: Status;
-  life_status: UserStatus;
+  life_status: LifeStatus;
 }

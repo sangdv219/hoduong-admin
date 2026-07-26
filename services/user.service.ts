@@ -18,10 +18,14 @@ function buildSearchQuery(params: UserSearchParams): string {
   if (params.limit !== undefined) query.set("limit", String(params.limit));
   if (params.status !== undefined) query.set("status", String(params.status));
   if (params.gender !== undefined) query.set("gender", String(params.gender));
+  if (params.sortBy !== undefined) query.set("sortBy", String(params.sortBy));
+  if (params.sortOrder !== undefined)
+    query.set("sortOrder", String(params.sortOrder));
   if (params.life_status !== undefined)
     query.set("life_status", String(params.life_status));
 
   const qs = query.toString();
+  console.log("qs", qs);
   return qs ? `?${qs}` : "";
 }
 export const userService = {
@@ -49,7 +53,7 @@ export const userService = {
     });
   },
 
-  changeUserStatus(id: string, payload: string) {
+  changeLifeStatus(id: string, payload: string) {
     return apiClient<UserDTO>(`/user-admin/changeUserStatus/${id}`, {
       method: "PATCH",
       body: { status: payload },
