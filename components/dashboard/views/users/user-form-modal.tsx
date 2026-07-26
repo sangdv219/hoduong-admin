@@ -45,6 +45,8 @@ export function UserFormModal({ open, userId, onClose }: UserFormModalProps) {
     open && userId ? userId : null,
   );
 
+  console.log("open", open);
+  console.log("userId", userId);
   const isFormValid = useFormValid(form, open, loadingDetail);
   const createMutation = useCreateUser();
   const updateMutation = useUpdateUser();

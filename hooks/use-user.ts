@@ -50,6 +50,7 @@ export function useUserDetail(id: string | null) {
     queryKey: USER_QUERY_KEYS.detail(id ?? ""),
     queryFn: () => userService.getById(id!),
     enabled: !!id,
+    staleTime: 1,
   });
 }
 
