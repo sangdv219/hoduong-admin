@@ -175,7 +175,12 @@ export function getUserColumns(
       dataIndex: "age",
       key: "age",
       sorter: true,
-      sortOrder: sortOrder === "ASC" ? "ascend" : "descend",
+      sortOrder:
+        sortField === "age"
+          ? sortOrder === "ASC"
+            ? "ascend"
+            : "descend"
+          : null,
       width: 100,
       render: (age: number) => <span style={{ color: "#374151" }}>{age}</span>,
     },

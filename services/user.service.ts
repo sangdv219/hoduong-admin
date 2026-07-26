@@ -25,7 +25,6 @@ function buildSearchQuery(params: UserSearchParams): string {
     query.set("life_status", String(params.life_status));
 
   const qs = query.toString();
-  console.log("qs", qs);
   return qs ? `?${qs}` : "";
 }
 export const userService = {
