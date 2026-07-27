@@ -17,7 +17,7 @@ function handleMutationError(
 }
 
 export function useUsers({ sortBy, sortOrder }: any) {
-  const { keyword, page, limit, status, gender, life_status } =
+  const { keyword, page, limit, status, gender, life_status, roleId } =
     useUserFilterStore();
   return useQuery({
     queryKey: USER_QUERY_KEYS.list({
@@ -29,6 +29,7 @@ export function useUsers({ sortBy, sortOrder }: any) {
       life_status,
       sortBy,
       sortOrder,
+      roleId,
     }),
     queryFn: () =>
       userService.search({
@@ -40,6 +41,7 @@ export function useUsers({ sortBy, sortOrder }: any) {
         life_status: life_status ?? undefined,
         sortBy,
         sortOrder,
+        role_id: roleId,
       }),
     placeholderData: (prev) => prev,
   });

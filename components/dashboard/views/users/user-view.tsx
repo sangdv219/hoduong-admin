@@ -30,6 +30,7 @@ import { UserFormModal } from "./user-form-modal";
 import { useUserFilterStore } from "@/stores/use-user-filter-store";
 import { UserSearchRecordDTO } from "@/types/user";
 import { useRouter, usePathname, useSearchParams } from "next/navigation";
+import { useRoles } from "@/hooks/use-role";
 
 export function UserView() {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
@@ -48,13 +49,18 @@ export function UserView() {
     status,
     gender,
     life_status,
+    roleId,
     setKeyword,
     setPage,
     reset,
     setStatus,
     setGender,
     setLifeStatus,
+    setRoleId,
   } = useUserFilterStore();
+
+  const { data: rolesData, isLoading: isLoadingRoles } = useRoles();
+
   const { data, isLoading, isFetching, refetch, error } = useUsers({
     sortBy: sortField,
     sortOrder: sortOrder,
@@ -198,6 +204,10 @@ export function UserView() {
     setEditingId(null);
   }
 
+  const handleRoleChange = (value?: string) => {
+    setRoleId(value === undefined ? undefined : value);
+  };
+
   const handleTableChange: TableProps<UserSearchRecordDTO>["onChange"] = (
     pagination,
     filters,
@@ -326,6 +336,20 @@ export function UserView() {
               { value: 0, label: "Đã mất" },
               { value: 1, label: "Còn sống" },
             ]}
+          />
+          <Select
+            placeholder="Vai trò"
+            style={{ width: 170, height: 34 }}
+            allowClear
+            loading={isLoadingRoles}
+            value={roleId}
+            onChange={handleRoleChange}
+            options={
+              rolesData?.items?.map((role: any) => ({
+                value: role.id,
+                label: role.name, // Thay đổi trường name/title tùy vào response API của bạn
+              })) || []
+            }
           />
 
           <Tooltip title="Làm mới">

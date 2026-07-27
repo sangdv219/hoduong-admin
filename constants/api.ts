@@ -6,6 +6,11 @@ export const USER_QUERY_KEYS = {
     ["user-admin", "list", params] as const,
   detail: (id: string) => ["user-admin", "detail", id] as const,
 };
+export const ROLE_QUERY_KEYS = {
+  all: ["role"] as const,
+  list: (params: Record<string, unknown>) => ["role", "list", params] as const,
+  detail: (id: string) => ["role", "detail", id] as const,
+};
 
 export const GENDER_OPTIONS = [
   { value: 0, label: "Nam" },

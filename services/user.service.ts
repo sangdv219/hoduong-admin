@@ -11,7 +11,6 @@ import {
 
 function buildSearchQuery(params: UserSearchParams): string {
   const query = new URLSearchParams();
-  // if (params.q !== undefined && params.q !== "") query.set("q", params.q);
   if (params.keyword !== undefined)
     query.set("keyword", String(params.keyword));
   if (params.page !== undefined) query.set("page", String(params.page));
@@ -23,6 +22,8 @@ function buildSearchQuery(params: UserSearchParams): string {
     query.set("sortOrder", String(params.sortOrder));
   if (params.life_status !== undefined)
     query.set("life_status", String(params.life_status));
+  if (params.role_id !== undefined)
+    query.set("role_id", String(params.role_id));
 
   const qs = query.toString();
   return qs ? `?${qs}` : "";

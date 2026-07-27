@@ -6,6 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "cache": "rm -rf .next",
+    "restart": "rm -rf .next && pkill -f 'next dev' || true && next dev -p 3001",
     "lint": "eslint .",
     "test": "vitest run"
   },

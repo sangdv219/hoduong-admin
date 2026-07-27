@@ -73,6 +73,7 @@ export interface UserSearchParams {
   life_status?: number;
   sortBy?: string;
   sortOrder?: "ASC" | "DESC";
+  role_id?: string;
 }
 
 export interface PaginatedResponse<T> {
