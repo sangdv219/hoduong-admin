@@ -110,7 +110,7 @@ export function UserFormModal({ open, userId, onClose }: UserFormModalProps) {
       if (isEdit && userId) {
         const payload: UpdateUserDTO = {
           fullname: values.fullname,
-          roleId: "026e2174-aff3-4461-9f43-0e16c9a88f17",
+          roleId: "ac05fa49-6022-434d-a53c-c1187eb811e7",
           other_name: values.other_name,
           gender: values.gender,
           phone: values.phone || null,
@@ -132,7 +132,7 @@ export function UserFormModal({ open, userId, onClose }: UserFormModalProps) {
           email: values.email,
           fullname: values.fullname,
           password: values.password,
-          roleId: "026e2174-aff3-4461-9f43-0e16c9a88f17",
+          roleId: "ac05fa49-6022-434d-a53c-c1187eb811e7",
           other_name: values.other_name || null,
           gender: values.gender,
           phone: values.phone || null,

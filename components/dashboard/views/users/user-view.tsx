@@ -54,6 +54,7 @@ export function UserView() {
     setPage,
     reset,
     setStatus,
+    setLimit,
     setGender,
     setLifeStatus,
     setRoleId,
@@ -91,6 +92,7 @@ export function UserView() {
 
     // Lọc và chỉ đẩy lên URL những giá trị hợp lệ (khác undefined/null và khác mặc định)
     if (page > 1) params.set("page", page.toString());
+    if (limit && limit !== 10) params.set("limit", limit.toString());
     if (keyword) params.set("keyword", keyword);
     if (status) params.set("status", status);
     if (gender !== undefined) params.set("gender", gender.toString());
@@ -105,6 +107,7 @@ export function UserView() {
       : pathname;
     router.replace(newUrl, { scroll: false });
   }, [
+    limit,
     page,
     keyword,
     status,
@@ -213,6 +216,12 @@ export function UserView() {
     filters,
     sorter,
   ) => {
+    if (pagination.pageSize && pagination.pageSize !== limit) {
+      setLimit(pagination.pageSize);
+      setPage(1); // Luôn về trang 1 khi đổi limit
+      return;
+    }
+
     // 1. Xử lý phân trang
     if (pagination.current && pagination.current !== page) {
       setPage(pagination.current);
@@ -438,8 +447,9 @@ export function UserView() {
               pagination={{
                 current: page,
                 pageSize: limit,
-                total: data?.totalRecord ?? 0,
-                showSizeChanger: false,
+                total: data?.totalPages ?? 0,
+                showSizeChanger: true,
+                pageSizeOptions: ["10", "20", "50", "100"],
                 onChange: (nextPage) => setPage(nextPage),
                 showTotal: (total) => (
                   <span style={{ fontSize: 12, color: "#6b7280" }}>

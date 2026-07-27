@@ -24,9 +24,9 @@ export interface UserDTO {
 export interface UserSearchRecordDTO {
   records: {
     items: UserDTO[] | null;
-    total: number;
-    page: number;
-    limit: number;
+    // total: number;
+    // page: number;
+    // limit: number;
     totalPages: number;
   };
 }
@@ -78,7 +78,7 @@ export interface UserSearchParams {
 
 export interface PaginatedResponse<T> {
   items: T[] | null;
-  totalRecord: number;
+  totalPages: number;
 }
 
 export interface UserFormValues {

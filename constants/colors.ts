@@ -15,7 +15,9 @@ export const CONTENT_BG = "#f0f2f5";
 export const SURFACE_BG = "#ffffff";
 
 export const ROLE_COLORS: Record<string, string> = {
-  Admin: "volcano",
-  Supervisor: "geekblue",
-  // Manager: "purple",
+  SuperAdmin: "volcano",
+  FamilyAdmin: "geekblue",
+  Editor: "orange",
+  Viewer: "blue",
+  Guest: "gray",
 };

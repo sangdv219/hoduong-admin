@@ -10,6 +10,7 @@ interface UserFilterState {
   roleId?: string;
   setKeyword: (search: string) => void;
   setPage: (page: number) => void;
+  setLimit: (page: number) => void;
   reset: () => void;
   setStatus: (status?: "suspended" | "pending" | "inactive" | "active") => void;
   setGender: (gender?: number) => void;
@@ -17,7 +18,7 @@ interface UserFilterState {
   setRoleId: (roleId?: string) => void;
 }
 
-const DEFAULT_LIMIT = 15;
+const DEFAULT_LIMIT = 10;
 
 export const useUserFilterStore = create<UserFilterState>((set) => ({
   keyword: undefined,
@@ -28,6 +29,7 @@ export const useUserFilterStore = create<UserFilterState>((set) => ({
   roleId: undefined,
   setKeyword: (keyword) => set({ keyword, page: 1 }),
   setPage: (page) => set({ page }),
+  setLimit: (limit) => set({ limit }),
   setStatus: (status) => set({ status, page: 1 }),
   setGender: (gender) => set({ gender, page: 1 }),
   setLifeStatus: (life_status) => set({ life_status, page: 1 }),
