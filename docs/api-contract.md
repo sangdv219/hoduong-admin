@@ -2,7 +2,7 @@
 
 Base URL
 
-/api/v1
+/api/v2
 
 # Authentication
 

@@ -1,9 +1,11 @@
 "use client";
 
 import { GENDER_OPTIONS, Status, STATUS_OPTIONS } from "@/constants/api";
+import { useRoles } from "@/hooks/use-role";
 import { useCreateUser, useUpdateUser, useUserDetail } from "@/hooks/use-user";
+import { RoleDTO } from "@/types/role";
 import { CreateUserDTO, UpdateUserDTO } from "@/types/user";
-import { userToFormValues } from "@/utils/user";
+import { formUserDefault, userToFormValues } from "@/utils/user-form";
 import { DatePicker, Form, Input, Modal, Select, Spin, Switch } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
@@ -44,47 +46,11 @@ export function UserFormModal({ open, userId, onClose }: UserFormModalProps) {
   const { data: user, isLoading: loadingDetail } = useUserDetail(
     open && userId ? userId : null,
   );
-
+  const { data: roles, isLoading: isLoadingRoles } = useRoles();
   const isFormValid = useFormValid(form, open, loadingDetail);
   const createMutation = useCreateUser();
   const updateMutation = useUpdateUser();
-
   const submitting = createMutation.isPending || updateMutation.isPending;
-
-  useEffect(() => {
-    if (!open) return; // Nếu đóng thì không làm gì cả, tránh gọi form instance lỗi
-
-    // Xóa dữ liệu cũ của lần bật trước đó để tránh lag data
-    form.resetFields();
-
-    if (isEdit && user) {
-      const values = userToFormValues(user);
-      form.setFieldsValue({
-        ...values,
-        birth_date: values.birth_date ? dayjs(values.birth_date) : null,
-        year_of_death: values.year_of_death
-          ? dayjs(values.year_of_death)
-          : null,
-      });
-
-      form.validateFields({ validateOnly: false }).catch(() => {});
-    } else if (!isEdit) {
-      form.setFieldsValue({
-        email: "",
-        password: "1234567",
-        other_name: "",
-        gender: 0,
-        phone: "",
-        birth_date: "",
-        life_status: 1,
-        year_of_death: "",
-        burial_place: "",
-        address: "",
-        biography: "",
-      });
-      form.validateFields({ validateOnly: true }).catch(() => {});
-    }
-  }, [open, isEdit, user, form]);
 
   async function handleSubmit() {
     try {
@@ -110,7 +76,6 @@ export function UserFormModal({ open, userId, onClose }: UserFormModalProps) {
       if (isEdit && userId) {
         const payload: UpdateUserDTO = {
           fullname: values.fullname,
-          roleId: "ac05fa49-6022-434d-a53c-c1187eb811e7",
           other_name: values.other_name,
           gender: values.gender,
           phone: values.phone || null,
@@ -125,6 +90,7 @@ export function UserFormModal({ open, userId, onClose }: UserFormModalProps) {
           burial_place: values.burial_place || null,
           address: values.address || null,
           biography: values.biography || null,
+          roles: values.roles,
         };
         await updateMutation.mutateAsync({ id: userId, payload });
       } else {
@@ -132,7 +98,6 @@ export function UserFormModal({ open, userId, onClose }: UserFormModalProps) {
           email: values.email,
           fullname: values.fullname,
           password: values.password,
-          roleId: "ac05fa49-6022-434d-a53c-c1187eb811e7",
           other_name: values.other_name || null,
           gender: values.gender,
           phone: values.phone || null,
@@ -148,7 +113,6 @@ export function UserFormModal({ open, userId, onClose }: UserFormModalProps) {
           address: values.address || null,
           biography: values.biography || null,
         };
-
         await createMutation.mutateAsync(payload);
       }
 
@@ -157,6 +121,33 @@ export function UserFormModal({ open, userId, onClose }: UserFormModalProps) {
       console.error("Submit thất bại:", error);
     }
   }
+
+  useEffect(() => {
+    if (!open) return; // Nếu đóng thì không làm gì cả, tránh gọi form instance lỗi
+
+    // Xóa dữ liệu cũ của lần bật trước đó để tránh lag data
+    form.resetFields();
+
+    if (isEdit && user) {
+      const values = userToFormValues(user.items);
+      form.setFieldsValue({
+        ...values,
+        roles: values.roles.map((i: RoleDTO) => ({
+          label: i.name,
+          value: i.id,
+        })),
+        birth_date: values.birth_date ? dayjs(values.birth_date) : null,
+        year_of_death: values.year_of_death
+          ? dayjs(values.year_of_death)
+          : null,
+      });
+
+      form.validateFields({ validateOnly: false }).catch(() => {});
+    } else if (!isEdit) {
+      form.setFieldsValue(formUserDefault);
+      form.validateFields({ validateOnly: true }).catch(() => {});
+    }
+  }, [open, isEdit, user, form]);
 
   return (
     <Modal
@@ -265,6 +256,30 @@ export function UserFormModal({ open, userId, onClose }: UserFormModalProps) {
                 </Form.Item>
               </>
             )}
+          </div>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr",
+              gap: 12,
+            }}
+          >
+            <Form.Item name="roles" label="Vai trò">
+              <Select
+                mode="multiple"
+                allowClear
+                placeholder="Vai trò"
+                loading={isLoadingRoles}
+                variant="filled"
+                options={
+                  roles?.items?.map((role: any) => ({
+                    key: role.id,
+                    value: role.id,
+                    label: role.name,
+                  })) || []
+                }
+              />
+            </Form.Item>
           </div>
 
           <Form.Item name="address" label="Địa chỉ sống">

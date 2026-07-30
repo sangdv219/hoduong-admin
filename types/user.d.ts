@@ -17,8 +17,12 @@ export interface UserDTO {
   biography?: string | null;
   life_status: LifeStatus;
   status: Status;
+  roles: Recod<string, string>[];
   createdAt?: string;
   updatedAt?: string;
+}
+export interface UserDetailDTO {
+  items: UserDTO;
 }
 
 export interface UserSearchRecordDTO {
@@ -27,14 +31,13 @@ export interface UserSearchRecordDTO {
     // total: number;
     // page: number;
     // limit: number;
-    totalPages: number;
+    totalRecord: number;
   };
 }
 
 export interface CreateUserDTO {
   email?: string | null;
   fullname?: string;
-  roleId: string;
   password: string;
   other_name?: string | null;
   gender: UserGender;
@@ -50,7 +53,6 @@ export interface CreateUserDTO {
 
 export interface UpdateUserDTO {
   fullname: string;
-  roleId: string;
   other_name: string | null;
   gender: UserGender;
   phone: string | null;
@@ -61,6 +63,7 @@ export interface UpdateUserDTO {
   burial_place?: string | null;
   address?: string | null;
   biography?: string | null;
+  roles: string[];
 }
 
 export interface UserSearchParams {
@@ -78,14 +81,13 @@ export interface UserSearchParams {
 
 export interface PaginatedResponse<T> {
   items: T[] | null;
-  totalPages: number;
+  totalRecord: number;
 }
 
 export interface UserFormValues {
   email?: string | null;
   fullname?: string;
-  password: string;
-  roleId: string;
+  password: string | null;
   other_name?: string | null;
   age?: number | null;
   gender: UserGender;
@@ -97,4 +99,5 @@ export interface UserFormValues {
   biography?: string | null;
   status?: Status;
   life_status: LifeStatus;
+  roles: Recod<string, string>[];
 }

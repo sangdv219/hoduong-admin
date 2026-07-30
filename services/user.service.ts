@@ -4,6 +4,7 @@ import {
   CreateUserDTO,
   PaginatedResponse,
   UpdateUserDTO,
+  UserDetailDTO,
   UserDTO,
   UserSearchParams,
   UserSearchRecordDTO,
@@ -36,7 +37,7 @@ export const userService = {
   },
 
   getById(id: string) {
-    return apiClient<UserDTO>(`/user-admin/${id}`);
+    return apiClient<UserDetailDTO>(`/user-admin/${id}`);
   },
 
   create(payload: CreateUserDTO) {

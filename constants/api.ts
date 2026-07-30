@@ -1,4 +1,4 @@
-export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL ?? "/api/v1";
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;
 
 export const USER_QUERY_KEYS = {
   all: ["user-admin"] as const,

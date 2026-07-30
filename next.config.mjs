@@ -31,10 +31,10 @@ const nextConfig = {
   //       destination: `${backend}${process.env.NEXT_PUBLIC_API_URL}/:path*`,
   //     },
   //     // {
-  //     //   // Khớp chính xác với mọi request bắt đầu bằng /api/v1/
-  //     //   source: "/api/v1/:path*",
+  //     //   // Khớp chính xác với mọi request bắt đầu bằng /api/v2/
+  //     //   source: "/api/v2/:path*",
   //     //   // Chuyển thẳng tới server NestJS port 3000
-  //     //   destination: "http://localhost:3000/api/v1/:path*",
+  //     //   destination: "http://localhost:3000/api/v2/:path*",
   //     // },
   //   ];
   // },

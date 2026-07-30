@@ -2,7 +2,7 @@
 
 import { ROLE_COLORS } from "@/constants/colors";
 import { UserDTO } from "@/types/user";
-import { formatGender } from "@/utils/user";
+import { formatGender } from "@/utils/user-form";
 import {
   DeleteOutlined,
   EditOutlined,

@@ -83,8 +83,6 @@ export function UserView() {
     if (urlLifeStatus) setLifeStatus(Number(urlLifeStatus));
     if (urlSortField) setSortField(urlSortField);
     if (urlSortOrder) setSortOrder(urlSortOrder);
-
-    console.log("urlPage", urlPage);
   }, []);
 
   useEffect(() => {
@@ -356,7 +354,7 @@ export function UserView() {
             options={
               rolesData?.items?.map((role: any) => ({
                 value: role.id,
-                label: role.name, // Thay đổi trường name/title tùy vào response API của bạn
+                label: role.name,
               })) || []
             }
           />
@@ -447,7 +445,7 @@ export function UserView() {
               pagination={{
                 current: page,
                 pageSize: limit,
-                total: data?.totalPages ?? 0,
+                total: data?.totalRecord ?? 0,
                 showSizeChanger: true,
                 pageSizeOptions: ["10", "20", "50", "100"],
                 onChange: (nextPage) => setPage(nextPage),
