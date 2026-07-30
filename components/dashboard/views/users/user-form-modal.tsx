@@ -7,6 +7,7 @@ import { RoleDTO } from "@/types/role";
 import { CreateUserDTO, UpdateUserDTO } from "@/types/user";
 import { formUserDefault, userToFormValues } from "@/utils/user-form";
 import { DatePicker, Form, Input, Modal, Select, Spin, Switch } from "antd";
+import { log } from "console";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 
@@ -72,7 +73,6 @@ export function UserFormModal({ open, userId, onClose }: UserFormModalProps) {
         // Bắt buộc tránh số âm nếu nhập liệu sai lệch ngày tháng
         age = calculatedAge < 0 ? 0 : calculatedAge;
       }
-
       if (isEdit && userId) {
         const payload: UpdateUserDTO = {
           fullname: values.fullname,
@@ -90,8 +90,13 @@ export function UserFormModal({ open, userId, onClose }: UserFormModalProps) {
           burial_place: values.burial_place || null,
           address: values.address || null,
           biography: values.biography || null,
-          roles: values.roles,
+          roles:
+            values.roles?.map((r: any) =>
+              typeof r === "object" ? r.value : r,
+            ) || [],
         };
+        console.log("payload", payload);
+
         await updateMutation.mutateAsync({ id: userId, payload });
       } else {
         const payload: CreateUserDTO = {
@@ -115,7 +120,6 @@ export function UserFormModal({ open, userId, onClose }: UserFormModalProps) {
         };
         await createMutation.mutateAsync(payload);
       }
-
       onClose();
     } catch (error) {
       console.error("Submit thất bại:", error);

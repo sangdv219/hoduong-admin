@@ -1,19 +1,28 @@
 "use client";
 
 import { PageTitleBar } from "@/components/dashboard/shared/page-title-bar";
-import { GREEN_PRIMARY, SURFACE_BG } from "@/constants/colors";
+import {
+  GREEN_PRIMARY,
+  HEADER_BG,
+  RED_PRIMARY,
+  SURFACE_BG,
+} from "@/constants/colors";
+import React from "react";
+import { useRoles } from "@/hooks/use-role";
 import {
   useActivateUser,
   useDeactivateUser,
   useDeleteUser,
-  useUsers,
   useSuspendUser,
+  useUsers,
 } from "@/hooks/use-user";
-import { debounce } from "lodash";
+import { useUserFilterStore } from "@/stores/use-user-filter-store";
+import { UserSearchRecordDTO } from "@/types/user";
 import {
-  PlusOutlined,
   ReloadOutlined,
   SearchOutlined,
+  UserAddOutlined,
+  UserDeleteOutlined,
 } from "@ant-design/icons";
 import {
   Button,
@@ -24,13 +33,12 @@ import {
   TableProps,
   Tooltip,
 } from "antd";
+import { debounce } from "lodash";
+import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import { getUserColumns } from "./user-columns";
 import { UserFormModal } from "./user-form-modal";
-import { useUserFilterStore } from "@/stores/use-user-filter-store";
-import { UserSearchRecordDTO } from "@/types/user";
-import { useRouter, usePathname, useSearchParams } from "next/navigation";
-import { useRoles } from "@/hooks/use-role";
+import { Flex, Spin } from "antd";
 
 export function UserView() {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
@@ -245,23 +253,42 @@ export function UserView() {
       <PageTitleBar
         title="Quản lý người dùng"
         actions={
-          <Button
-            type="primary"
-            icon={<PlusOutlined />}
-            onClick={handleAdd}
-            style={{
-              background: GREEN_PRIMARY,
-              borderColor: GREEN_PRIMARY,
-              fontWeight: 600,
-              fontSize: 13,
-              height: 34,
-              paddingLeft: 16,
-              paddingRight: 16,
-              boxShadow: `0 2px 6px ${GREEN_PRIMARY}55`,
-            }}
-          >
-            Thêm người dùng
-          </Button>
+          <>
+            <Button
+              type="primary"
+              icon={<UserAddOutlined />}
+              onClick={handleAdd}
+              style={{
+                background: GREEN_PRIMARY,
+                borderColor: GREEN_PRIMARY,
+                fontWeight: 600,
+                fontSize: 13,
+                height: 34,
+                paddingLeft: 16,
+                paddingRight: 16,
+                boxShadow: `0 2px 6px ${GREEN_PRIMARY}55`,
+              }}
+            >
+              Thêm
+            </Button>
+            <Button
+              type="primary"
+              icon={<UserDeleteOutlined />}
+              onClick={handleAdd}
+              style={{
+                background: RED_PRIMARY,
+                borderColor: RED_PRIMARY,
+                fontWeight: 600,
+                fontSize: 13,
+                height: 34,
+                paddingLeft: 16,
+                paddingRight: 16,
+                boxShadow: `0 2px 6px ${RED_PRIMARY}55`,
+              }}
+            >
+              Xoá
+            </Button>
+          </>
         }
       />
 
@@ -304,10 +331,6 @@ export function UserView() {
               setPage(1);
             }}
           />
-
-          <Button type="primary" onClick={handleSearch} style={{ height: 34 }}>
-            Tìm kiếm
-          </Button>
 
           <Select
             placeholder="Trạng thái"
@@ -414,22 +437,16 @@ export function UserView() {
 
         <div
           style={{
-            background: SURFACE_BG,
+            background: HEADER_BG,
             borderRadius: 8,
             boxShadow: "0 1px 4px rgba(0,0,0,0.07)",
             overflow: "hidden",
           }}
         >
           {isLoading ? (
-            <div
-              style={{
-                padding: "40px 0",
-                textAlign: "center",
-                color: "#6b7280",
-              }}
-            >
-              Đang tải danh sách người dùng...
-            </div>
+            <Flex justify="center" align="center" style={{ padding: "40px 0" }}>
+              <Spin size="large" />
+            </Flex>
           ) : (
             <Table
               rowSelection={{
