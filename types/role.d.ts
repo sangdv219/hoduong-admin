@@ -4,17 +4,19 @@ export interface RoleDTO {
   id: string;
   name: string;
   description: string;
-  createdAt?: string;
-  updatedAt?: string;
+  created_by?: string;
+  updated_by?: string;
+  created_at?: Date;
+  updated_at?: Date;
 }
 
 export interface RoleSearchRecordDTO {
   records: {
     items: RoleDTO[] | null;
-    total: number;
-    page: number;
-    limit: number;
-    totalPages: number;
+    // total: number;
+    // page: number;
+    // limit: number;
+    totalRecord: number;
   };
 }
 
