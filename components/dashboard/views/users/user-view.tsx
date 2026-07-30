@@ -7,7 +7,7 @@ import {
   RED_PRIMARY,
   SURFACE_BG,
 } from "@/constants/colors";
-import React from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useRoles } from "@/hooks/use-role";
 import {
   useActivateUser,
@@ -26,8 +26,10 @@ import {
 } from "@ant-design/icons";
 import {
   Button,
+  Flex,
   Input,
   Select,
+  Spin,
   Table,
   TableColumnsType,
   TableProps,
@@ -35,10 +37,9 @@ import {
 } from "antd";
 import { debounce } from "lodash";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import { useEffect, useMemo, useState } from "react";
 import { getUserColumns } from "./user-columns";
 import { UserFormModal } from "./user-form-modal";
-import { Flex, Spin } from "antd";
+import { DeleteConfirmModal } from "../../shared/delete-confirm-modal";
 
 export function UserView() {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
@@ -46,6 +47,11 @@ export function UserView() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [sortField, setSortField] = useState<string | undefined>();
   const [sortOrder, setSortOrder] = useState<"ASC" | "DESC" | undefined>();
+
+  // State quản lý Modal Xác nhận Xóa
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+  const [deletingIds, setDeletingIds] = useState<React.Key[]>([]);
+
   const router = useRouter();
   const pathname = usePathname();
   const searchParams = useSearchParams();
@@ -75,6 +81,14 @@ export function UserView() {
     sortOrder: sortOrder,
   });
 
+  const deactivateMutation = useDeactivateUser();
+  const activateMutation = useActivateUser();
+  const deleteMutation = useDeleteUser();
+  const suspendMutation = useSuspendUser();
+
+  const [searchText, setSearchText] = useState(keyword);
+
+  // Sync state từ query params khi mount
   useEffect(() => {
     const urlPage = searchParams.get("page");
     const urlKeyword = searchParams.get("keyword");
@@ -93,10 +107,10 @@ export function UserView() {
     if (urlSortOrder) setSortOrder(urlSortOrder);
   }, []);
 
+  // Đồng bộ state filter lên URL
   useEffect(() => {
     const params = new URLSearchParams();
 
-    // Lọc và chỉ đẩy lên URL những giá trị hợp lệ (khác undefined/null và khác mặc định)
     if (page > 1) params.set("page", page.toString());
     if (limit && limit !== 10) params.set("limit", limit.toString());
     if (keyword) params.set("keyword", keyword);
@@ -107,7 +121,6 @@ export function UserView() {
     if (sortField) params.set("sortField", sortField);
     if (sortOrder) params.set("sortOrder", sortOrder);
 
-    // Cập nhật URL hiện tại bằng replace, giữ nguyên vị trí cuộn trang (scroll: false)
     const newUrl = params.toString()
       ? `${pathname}?${params.toString()}`
       : pathname;
@@ -125,12 +138,6 @@ export function UserView() {
     router,
   ]);
 
-  const deactivateMutation = useDeactivateUser();
-  const activateMutation = useActivateUser();
-  const deleteMutation = useDeleteUser();
-  const suspendMutation = useSuspendUser();
-  const [searchText, setSearchText] = useState(keyword);
-
   const debounceSearch = useMemo(
     () =>
       debounce((value: string) => {
@@ -145,6 +152,27 @@ export function UserView() {
       debounceSearch.cancel();
     };
   }, [debounceSearch]);
+
+  // Xử lý Xóa đơn lẻ khi click nút xóa trong từng dòng của Bảng
+  const handleSingleDeleteClick = (id: string) => {
+    setDeletingIds([id]);
+    setDeleteModalOpen(true);
+  };
+
+  // Xử lý Xóa nhiều dòng từ Nút Xóa ở Header
+  const handleBatchDeleteClick = () => {
+    if (selectedRowKeys.length === 0) return;
+    setDeletingIds(selectedRowKeys);
+    setDeleteModalOpen(true);
+  };
+
+  // Tìm tên người dùng nếu chỉ thực hiện xóa 1 dòng
+  const singleDeletingUser = useMemo(() => {
+    if (deletingIds.length === 1) {
+      return data?.items?.find((user: any) => user.id === deletingIds[0]);
+    }
+    return null;
+  }, [deletingIds, data?.items]);
 
   const columns = useMemo(
     () =>
@@ -173,10 +201,6 @@ export function UserView() {
       activateMutation.variables,
       deactivateMutation.isPending,
       deactivateMutation.variables,
-      deleteMutation.isPending,
-      deleteMutation.variables,
-      suspendMutation.isPending,
-      suspendMutation.variables,
       sortField,
       sortOrder,
     ],
@@ -195,12 +219,10 @@ export function UserView() {
 
   const handleGenderChange = (value?: number) => {
     setGender(value === undefined ? undefined : value);
-    // setPage(1);
   };
 
   const handleLifeStatusChange = (value?: number) => {
     setLifeStatus(value === undefined ? undefined : value);
-    // setPage(1);
   };
 
   function handleAdd() {
@@ -224,27 +246,38 @@ export function UserView() {
   ) => {
     if (pagination.pageSize && pagination.pageSize !== limit) {
       setLimit(pagination.pageSize);
-      setPage(1); // Luôn về trang 1 khi đổi limit
+      setPage(1);
       return;
     }
 
-    // 1. Xử lý phân trang
     if (pagination.current && pagination.current !== page) {
       setPage(pagination.current);
     }
 
-    // 2. Xử lý sắp xếp (Server-side sort)
     if (!Array.isArray(sorter)) {
       if (sorter.order) {
         setSortField(sorter.field as string);
         setSortOrder(sorter.order === "ascend" ? "ASC" : "DESC");
       } else {
-        // Reset sort khi click lần 3 (bỏ sort)
         setSortField(undefined);
         setSortOrder(undefined);
       }
-      // Note: Nếu bạn muốn reset về trang 1 khi đổi sort, hãy uncomment dòng dưới
-      // setPage(1);
+    }
+  };
+
+  const handleConfirmDelete = async () => {
+    try {
+      for (const id of deletingIds) {
+        await deleteMutation.mutateAsync(id as string);
+      }
+      setDeleteModalOpen(false);
+      // Loại bỏ các key đã xóa khỏi danh sách được chọn
+      setSelectedRowKeys((prevKeys) =>
+        prevKeys.filter((key) => !deletingIds.includes(key)),
+      );
+      setDeletingIds([]);
+    } catch (error) {
+      console.error("Xóa thất bại:", error);
     }
   };
 
@@ -274,7 +307,8 @@ export function UserView() {
             <Button
               type="primary"
               icon={<UserDeleteOutlined />}
-              onClick={handleAdd}
+              disabled={selectedRowKeys.length === 0}
+              onClick={handleBatchDeleteClick}
               style={{
                 background: RED_PRIMARY,
                 borderColor: RED_PRIMARY,
@@ -284,9 +318,11 @@ export function UserView() {
                 paddingLeft: 16,
                 paddingRight: 16,
                 boxShadow: `0 2px 6px ${RED_PRIMARY}55`,
+                opacity: selectedRowKeys.length === 0 ? 0.6 : 1,
               }}
             >
-              Xoá
+              Xoá{" "}
+              {selectedRowKeys.length > 0 ? `(${selectedRowKeys.length})` : ""}
             </Button>
           </>
         }
@@ -484,10 +520,24 @@ export function UserView() {
           )}
         </div>
       </div>
+
+      {/* Modal Thêm/Sửa */}
       <UserFormModal
         open={modalOpen}
         userId={editingId}
         onClose={handleCloseModal}
+      />
+
+      {/* Modal Xác nhận Xóa Dùng Chung */}
+      <DeleteConfirmModal
+        open={deleteModalOpen}
+        selectedCount={deletingIds.length}
+        // itemName={"ád"}
+        // itemName={singleDeletingUser?.fullname}
+        entityName="người dùng"
+        onClose={() => setDeleteModalOpen(false)}
+        onConfirm={handleConfirmDelete}
+        loading={deleteMutation.isPending}
       />
     </>
   );
