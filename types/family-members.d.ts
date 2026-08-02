@@ -1,6 +1,6 @@
-import { UserGender, LifeStatus, Status } from "@/constants/api";
+import { FamilyMembersGender, LifeStatus, Status } from "@/constants/api";
 
-export interface IUser {
+export interface FamilyMembersDTO {
   id: string;
   email: string;
   fullname: string;
@@ -8,7 +8,7 @@ export interface IUser {
   roleId: string;
   other_name?: string | null;
   age?: number | null;
-  gender: UserGender;
+  gender: FamilyMembersGender;
   phone?: string | null;
   birth_date?: Date | null;
   year_of_death?: Date | null;
@@ -21,13 +21,13 @@ export interface IUser {
   createdAt?: string;
   updatedAt?: string;
 }
-export interface UserDetailDTO {
-  items: IUser;
+export interface FamilyMembersDetailDTO {
+  items: FamilyMembersDTO;
 }
 
-export interface UserSearchRecordDTO {
+export interface FamilyMembersSearchRecordDTO {
   records: {
-    items: IUser[] | null;
+    items: FamilyMembersDTO[] | null;
     // total: number;
     // page: number;
     // limit: number;
@@ -35,12 +35,12 @@ export interface UserSearchRecordDTO {
   };
 }
 
-export interface CreateUserDTO {
+export interface CreateFamilyMembersDTO {
   email?: string | null;
   fullname?: string;
   password: string;
   other_name?: string | null;
-  gender: UserGender;
+  gender: FamilyMembersGender;
   phone?: string | null;
   birth_date?: Date | string | null;
   year_of_death?: Date | string | null;
@@ -51,10 +51,10 @@ export interface CreateUserDTO {
   life_status: LifeStatus;
 }
 
-export interface UpdateUserDTO {
+export interface UpdateFamilyMembersDTO {
   fullname: string;
   other_name: string | null;
-  gender: UserGender;
+  gender: FamilyMembersGender;
   phone: string | null;
   age: number | null;
   birth_date?: Date | string | null;
@@ -66,7 +66,7 @@ export interface UpdateUserDTO {
   roles: string[];
 }
 
-export interface UserSearchParams {
+export interface FamilyMembersSearchParams {
   keyword?: string;
   q?: string;
   page?: number;
@@ -79,13 +79,13 @@ export interface UserSearchParams {
   role_id?: string;
 }
 
-export interface UserFormValues {
+export interface FamilyMembersFormValues {
   email?: string | null;
   fullname?: string;
   password: string | null;
   other_name?: string | null;
   age?: number | null;
-  gender: UserGender;
+  gender: FamilyMembersGender;
   phone?: string | null;
   birth_date?: Date | null;
   year_of_death?: Date | null;

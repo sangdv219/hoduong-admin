@@ -16,6 +16,9 @@ const KhachHangThanhVienView = dynamic(() =>
 const UserView = dynamic(() =>
   import("./users/user-view").then((m) => m.UserView),
 );
+const FamilyMembersView = dynamic(() =>
+  import("./family-members/family-member-view").then((m) => m.FamilyMemberView),
+);
 
 const NhaCungCapView = dynamic(() =>
   import("./suppliers/nha-cung-cap-view").then((m) => m.NhaCungCapView),
@@ -56,8 +59,8 @@ export function ViewRouter({
       return <KhachHangThanhVienView />;
     case "user":
       return <UserView />;
-    // case "thung-rac":
-    //   return <UserView />;
+    case "family-members":
+      return <FamilyMembersView />;
     case "nha-cung-cap":
       return <NhaCungCapView />;
     case "bao-cao":

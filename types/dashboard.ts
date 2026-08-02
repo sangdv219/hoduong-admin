@@ -1,6 +1,7 @@
 export type ViewKey =
   | "cau-hinh-dat-ban"
   | "khach-hang-thanh-vien"
+  | "family-members"
   | "user"
   | "nha-cung-cap"
   | "bao-cao"
@@ -22,6 +23,7 @@ export interface ViewMeta {
 export const VIEW_KEYS: ViewKey[] = [
   "cau-hinh-dat-ban",
   "khach-hang-thanh-vien",
+  "family-members",
   "user",
   "nha-cung-cap",
   "bao-cao",

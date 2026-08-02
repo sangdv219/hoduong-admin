@@ -1,14 +1,14 @@
 "use client";
 
 import { ROLE_COLORS } from "@/constants/colors";
-import { UserDTO } from "@/types/user";
+import { IUser } from "@/types/user";
 import { formatGender } from "@/utils/user-form";
 import {
+  CloseCircleOutlined,
   DeleteOutlined,
-  EditOutlined,
+  FormOutlined,
   PauseCircleOutlined,
   PlayCircleOutlined,
-  CloseCircleOutlined,
 } from "@ant-design/icons";
 import type { TableColumnsType } from "antd";
 import { Button, Popconfirm, Space, Tag, Tooltip } from "antd";
@@ -49,11 +49,19 @@ const canDeactivate = (status: any) => status === Status.ACTIVE;
 const canSuspend = (status: any) =>
   [Status.ACTIVE, Status.INACTIVE, Status.PENDING].includes(status);
 
+const formatDate = (date: string | Date): string => {
+  const d = new Date(date);
+
+  const pad = (n: number) => String(n).padStart(2, "0");
+
+  return `${pad(d.getDate())}/${pad(d.getMonth() + 1)}/${d.getFullYear()} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
+};
+
 export function getUserColumns(
   handlers: UserColumnHandlers,
   sortField?: string,
   sortOrder?: "ASC" | "DESC",
-): TableColumnsType<UserDTO> {
+): TableColumnsType<IUser> {
   return [
     {
       title: "",
@@ -65,7 +73,7 @@ export function getUserColumns(
             <Button
               type="text"
               size="small"
-              icon={<EditOutlined style={{ fontSize: 20 }} />}
+              icon={<FormOutlined style={{ fontSize: 20 }} />}
               onClick={() => handlers.onEdit(record.id)}
               style={{ color: "#1a7a48" }}
             />
@@ -137,6 +145,7 @@ export function getUserColumns(
       title: "Tên khác",
       dataIndex: "other_name",
       key: "other_name",
+      width: 100,
       render: (other_name: string | null) => (
         <span style={{ fontWeight: 500, color: "#1a1a1a" }}>
           {other_name ?? "-"}
@@ -167,7 +176,7 @@ export function getUserColumns(
       dataIndex: "gender",
       key: "gender",
       width: 100,
-      render: (gender: UserDTO["gender"]) => (
+      render: (gender: IUser["gender"]) => (
         <span style={{ color: "#374151" }}>{formatGender(gender)}</span>
       ),
     },
@@ -176,23 +185,40 @@ export function getUserColumns(
       dataIndex: "age",
       key: "age",
       sorter: true,
+      width: 80,
+      align: "center",
       sortOrder:
         sortField === "age"
           ? sortOrder === "ASC"
             ? "ascend"
             : "descend"
           : null,
-      width: 100,
       render: (age: number) => <span style={{ color: "#374151" }}>{age}</span>,
     },
     {
       title: "Tình trạng",
       dataIndex: "life_status",
       key: "life_status",
+      width: 100,
       render: (life_status: 0 | 1) => (
         <span style={{ color: "#6b7280", fontSize: 12 }}>
           {life_status ? "Còn sống" : "Đã mất"}
         </span>
+      ),
+    },
+    {
+      title: "Ngày tạo",
+      dataIndex: "created_at",
+      key: "created_at",
+      sorter: true,
+      sortOrder:
+        sortField === "created_at"
+          ? sortOrder === "ASC"
+            ? "ascend"
+            : "descend"
+          : null,
+      render: (created_at: string) => (
+        <span style={{ color: "#374151" }}>{formatDate(created_at)}</span>
       ),
     },
     {

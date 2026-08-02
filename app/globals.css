@@ -191,3 +191,6 @@
 .delete-confirm-modal .ant-modal-container {
   padding: 0 !important;
 }
+.ant-table-selection-column .ant-checkbox-wrapper .ant-checkbox {
+  border: 1px hsl(162.99, 60.64%, 43.26%) solid !important;
+}

@@ -11,6 +11,12 @@ export const ROLE_QUERY_KEYS = {
   list: (params: Record<string, unknown>) => ["role", "list", params] as const,
   detail: (id: string) => ["role", "detail", id] as const,
 };
+export const FAMILY_MEMBERS_QUERY_KEYS = {
+  all: ["family_members"] as const,
+  list: (params: Record<string, unknown>) =>
+    ["family_members", "list", params] as const,
+  detail: (id: string) => ["family_members", "detail", id] as const,
+};
 
 export const GENDER_OPTIONS = [
   { value: 0, label: "Nam" },

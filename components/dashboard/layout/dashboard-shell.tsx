@@ -14,7 +14,6 @@ const { Content } = Layout;
 
 export default function DashboardShell() {
   const nav = useDashboardNavigation();
-
   return (
     <QueryProvider>
       <DashboardTheme>
@@ -49,7 +48,7 @@ export default function DashboardShell() {
                 setActiveTab={nav.setActiveTab}
                 systemSubView={nav.systemSubView}
                 setSystemSubView={nav.setSystemSubView}
-                onNavigateHome={() => nav.setCurrentView("user")}
+                onNavigateHome={() => nav.setCurrentView("family-members")}
               />
             </Content>
           </Layout>

@@ -8,7 +8,7 @@ import { VIEW_META, SYSTEM_MENU_BREADCRUMB } from "@/constants/breadcrumbs";
 export function useDashboardNavigation() {
   const [collapsed, setCollapsed] = useState(false);
   const [openKeys, setOpenKeys] = useState<string[]>(["mat-hang"]);
-  const [currentView, setCurrentView] = useState<ViewKey>("user");
+  const [currentView, setCurrentView] = useState<ViewKey>("family-members");
   const [activeTab, setActiveTab] = useState("mat-hang-config");
   const [systemSubView, setSystemSubView] = useState<SystemSubView>(null);
 

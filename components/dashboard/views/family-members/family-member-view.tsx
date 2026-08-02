@@ -38,10 +38,11 @@ import { debounce } from "lodash";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import React, { useEffect, useMemo, useState } from "react";
 import { DeleteConfirmModal } from "../../shared/delete-confirm-modal";
-import { getUserColumns } from "./user-columns";
-import { UserFormModal } from "./user-form-modal";
+import { getFamilyMemberColumns } from "./family-columns";
+import { useFamilyMembers } from "@/hooks/use-family-members";
+import { useFamilyMembersFilterStore } from "@/stores/use-family-members-filter-store";
 
-export function UserView() {
+export function FamilyMemberView() {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [editingId, setEditingId] = useState<string | null>(null);
@@ -72,11 +73,11 @@ export function UserView() {
     setGender,
     setLifeStatus,
     setRoleId,
-  } = useUserFilterStore();
+  } = useFamilyMembersFilterStore();
 
   const { data: rolesData, isLoading: isLoadingRoles } = useRoles();
 
-  const { data, isLoading, isFetching, refetch, error } = useUsers({
+  const { data, isLoading, isFetching, refetch, error } = useFamilyMembers({
     sortBy: sortField,
     sortOrder: sortOrder,
   });
@@ -176,7 +177,7 @@ export function UserView() {
 
   const columns = useMemo(
     () =>
-      getUserColumns(
+      getFamilyMemberColumns(
         {
           onEdit: (id) => {
             setEditingId(id);
@@ -284,7 +285,7 @@ export function UserView() {
   return (
     <>
       <PageTitleBar
-        title="Quản lý người dùng"
+        title="Quản lý phả hệ"
         actions={
           <>
             <Button
@@ -522,11 +523,11 @@ export function UserView() {
       </div>
 
       {/* Modal Thêm/Sửa */}
-      <UserFormModal
+      {/* <UserFormModal
         open={modalOpen}
         userId={editingId}
         onClose={handleCloseModal}
-      />
+      /> */}
 
       {/* Modal Xác nhận Xóa Dùng Chung */}
       <DeleteConfirmModal

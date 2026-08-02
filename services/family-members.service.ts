@@ -1,15 +1,15 @@
 import { apiClient } from "@/lib/api-client";
 import { PaginatedResponse } from "@/types/common";
 import {
-  CreateUserDTO,
-  UpdateUserDTO,
-  UserDetailDTO,
-  IUser,
-  UserSearchParams,
-  UserSearchRecordDTO,
-} from "@/types/user";
+  CreateFamilyMembersDTO,
+  FamilyMembersDetailDTO,
+  FamilyMembersDTO,
+  FamilyMembersSearchParams,
+  FamilyMembersSearchRecordDTO,
+  UpdateFamilyMembersDTO,
+} from "@/types/family-members";
 
-function buildSearchQuery(params: UserSearchParams): string {
+function buildSearchQuery(params: FamilyMembersSearchParams): string {
   const query = new URLSearchParams();
   if (params.keyword !== undefined)
     query.set("keyword", String(params.keyword));
@@ -28,35 +28,38 @@ function buildSearchQuery(params: UserSearchParams): string {
   const qs = query.toString();
   return qs ? `?${qs}` : "";
 }
-export const userService = {
-  search(params: UserSearchParams) {
-    return apiClient<PaginatedResponse<UserSearchRecordDTO>>(
-      `/user-admin${buildSearchQuery(params)}`,
+export const familyMembersService = {
+  search(params: FamilyMembersSearchParams) {
+    return apiClient<PaginatedResponse<FamilyMembersSearchRecordDTO>>(
+      `/family-members${buildSearchQuery(params)}`,
     );
   },
 
   getById(id: string) {
-    return apiClient<UserDetailDTO>(`/user-admin/${id}`);
+    return apiClient<FamilyMembersDetailDTO>(`/family-members/${id}`);
   },
 
-  create(payload: CreateUserDTO) {
-    return apiClient<IUser>("/user-admin", {
+  create(payload: CreateFamilyMembersDTO) {
+    return apiClient<FamilyMembersDTO>("/family-members", {
       method: "POST",
       body: payload,
     });
   },
 
-  update(id: string, payload: UpdateUserDTO) {
-    return apiClient<IUser>(`/user-admin/${id}`, {
+  update(id: string, payload: UpdateFamilyMembersDTO) {
+    return apiClient<FamilyMembersDTO>(`/family-members/${id}`, {
       method: "PATCH",
       body: payload,
     });
   },
 
   changeLifeStatus(id: string, payload: string) {
-    return apiClient<IUser>(`/user-admin/changeUserStatus/${id}`, {
-      method: "PATCH",
-      body: { status: payload },
-    });
+    return apiClient<FamilyMembersDTO>(
+      `/family-members/changeFamilyMembersStatus/${id}`,
+      {
+        method: "PATCH",
+        body: { status: payload },
+      },
+    );
   },
 };

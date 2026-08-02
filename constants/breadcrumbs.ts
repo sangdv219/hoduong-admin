@@ -25,6 +25,14 @@ export const VIEW_META: Record<ViewKey, ViewMeta> = {
     ],
     title: "QUẢN LÝ NGƯỜI DÙNG",
   },
+  "family-members": {
+    breadcrumb: [
+      { label: "Quản trị website" },
+      { label: "Gia phả" },
+      { label: "Gia phả", active: true },
+    ],
+    title: "QUẢN LÝ NGƯỜI DÙNG",
+  },
   "nha-cung-cap": {
     breadcrumb: [
       { label: "Quản lý" },

@@ -41,7 +41,7 @@ export const siderMenuItems: MenuItem[] = [
         label: "Gia phả",
         children: [
           {
-            key: "pha-do",
+            key: "family-members",
             label: "Phả đồ",
             icon: <BranchesOutlined />,
           },

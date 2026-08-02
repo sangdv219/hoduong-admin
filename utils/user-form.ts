@@ -1,4 +1,4 @@
-import type { UserDTO, UserFormValues } from "@/types/user";
+import type { IUser, UserFormValues } from "@/types/user";
 
 export const formUserDefault = {
   email: "",
@@ -13,7 +13,7 @@ export const formUserDefault = {
   address: "",
   biography: "",
 };
-export function userToFormValues(user: UserDTO): UserFormValues {
+export function userToFormValues(user: IUser): UserFormValues {
   return {
     email: user.email,
     fullname: user.fullname,
@@ -33,6 +33,6 @@ export function userToFormValues(user: UserDTO): UserFormValues {
   };
 }
 
-export function formatGender(gender: UserDTO["gender"]): string {
+export function formatGender(gender: IUser["gender"]): string {
   return gender === 0 ? "Nam" : "Nữ";
 }
