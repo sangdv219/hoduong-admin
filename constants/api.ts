@@ -28,6 +28,12 @@ export const STATUS_OPTIONS = [
   { value: 1, label: "Còn sống" },
 ];
 
+export const STATUS_MARRIE_OPTIONS = [
+  { value: "MARRIED", label: "Đã kết hôn" },
+  { value: "DIVORCED", label: "Đã ly hôn" },
+  { value: "WIDOWED", label: "Goá phụ" },
+];
+
 export type UserGender = 0 | 1;
 
 export type LifeStatus = 0 | 1;

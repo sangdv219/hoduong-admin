@@ -16,7 +16,6 @@ import {
   useUsers,
 } from "@/hooks/use-user";
 import { useUserFilterStore } from "@/stores/use-user-filter-store";
-import { UserSearchRecordDTO } from "@/types/user";
 import {
   ReloadOutlined,
   SearchOutlined,
@@ -41,6 +40,8 @@ import { DeleteConfirmModal } from "../../shared/delete-confirm-modal";
 import { getFamilyMemberColumns } from "./family-columns";
 import { useFamilyMembers } from "@/hooks/use-family-members";
 import { useFamilyMembersFilterStore } from "@/stores/use-family-members-filter-store";
+import { FamilyMembersFormModal } from "./family-members-form-modal";
+import { FamilyMembersSearchRecordDTO } from "@/types/family-members";
 
 export function FamilyMemberView() {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
@@ -240,31 +241,28 @@ export function FamilyMemberView() {
     setRoleId(value === undefined ? undefined : value);
   };
 
-  const handleTableChange: TableProps<UserSearchRecordDTO>["onChange"] = (
-    pagination,
-    filters,
-    sorter,
-  ) => {
-    if (pagination.pageSize && pagination.pageSize !== limit) {
-      setLimit(pagination.pageSize);
-      setPage(1);
-      return;
-    }
-
-    if (pagination.current && pagination.current !== page) {
-      setPage(pagination.current);
-    }
-
-    if (!Array.isArray(sorter)) {
-      if (sorter.order) {
-        setSortField(sorter.field as string);
-        setSortOrder(sorter.order === "ascend" ? "ASC" : "DESC");
-      } else {
-        setSortField(undefined);
-        setSortOrder(undefined);
+  const handleTableChange: TableProps<FamilyMembersSearchRecordDTO>["onChange"] =
+    (pagination, filters, sorter) => {
+      if (pagination.pageSize && pagination.pageSize !== limit) {
+        setLimit(pagination.pageSize);
+        setPage(1);
+        return;
       }
-    }
-  };
+
+      if (pagination.current && pagination.current !== page) {
+        setPage(pagination.current);
+      }
+
+      if (!Array.isArray(sorter)) {
+        if (sorter.order) {
+          setSortField(sorter.field as string);
+          setSortOrder(sorter.order === "ascend" ? "ASC" : "DESC");
+        } else {
+          setSortField(undefined);
+          setSortOrder(undefined);
+        }
+      }
+    };
 
   const handleConfirmDelete = async () => {
     try {
@@ -492,9 +490,9 @@ export function FamilyMemberView() {
               }}
               onChange={handleTableChange}
               columns={
-                columns as unknown as TableColumnsType<UserSearchRecordDTO>
+                columns as unknown as TableColumnsType<FamilyMembersSearchRecordDTO>
               }
-              dataSource={data?.items ?? ([] as UserSearchRecordDTO[])}
+              dataSource={data?.items ?? ([] as FamilyMembersSearchRecordDTO[])}
               loading={isLoading}
               pagination={{
                 current: page,
@@ -523,11 +521,11 @@ export function FamilyMemberView() {
       </div>
 
       {/* Modal Thêm/Sửa */}
-      {/* <UserFormModal
+      <FamilyMembersFormModal
         open={modalOpen}
-        userId={editingId}
+        familyMembersId={editingId}
         onClose={handleCloseModal}
-      /> */}
+      />
 
       {/* Modal Xác nhận Xóa Dùng Chung */}
       <DeleteConfirmModal

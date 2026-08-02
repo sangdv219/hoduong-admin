@@ -1,13 +1,16 @@
 "use client";
 
-import { GENDER_OPTIONS, STATUS_OPTIONS } from "@/constants/api";
-import { useRoles } from "@/hooks/use-role";
+import {
+  GENDER_OPTIONS,
+  STATUS_MARRIE_OPTIONS,
+  STATUS_OPTIONS,
+} from "@/constants/api";
+import { useUsers } from "@/hooks/use-user";
 import {
   useCreateFamilyMembers,
   useUpdateFamilyMembers,
 } from "@/hooks/use-family-members";
 import { useFamilyMembersDetail } from "@/hooks/use-family-members";
-import { RoleDTO } from "@/types/role";
 import {
   formFamilyMembersDefault,
   familyMembersToFormValues,
@@ -56,15 +59,16 @@ export function FamilyMembersFormModal({
 }: FamilyMembersFormModalProps) {
   const [form] = Form.useForm();
   const isEdit = !!familyMembersId;
-  const currentStatus = Form.useWatch("life_status", form);
+  const currentMarriedStatus = Form.useWatch("marriage_status", form);
   const { data: familyMembers, isLoading: loadingDetail } =
     useFamilyMembersDetail(open && familyMembersId ? familyMembersId : null);
-  const { data: roles, isLoading: isLoadingRoles } = useRoles();
+  const { data: users, isLoading: isLoadingUser } = useUsers({});
   const isFormValid = useFormValid(form, open, loadingDetail);
   const createMutation = useCreateFamilyMembers();
   const updateMutation = useUpdateFamilyMembers();
   const submitting = createMutation.isPending || updateMutation.isPending;
 
+  console.log("currentMarriedStatus", currentMarriedStatus);
   async function handleSubmit() {
     try {
       const values = await form.validateFields();
@@ -112,23 +116,8 @@ export function FamilyMembersFormModal({
         await updateMutation.mutateAsync({ id: familyMembersId, payload });
       } else {
         const payload: CreateFamilyMembersDTO = {
-          email: values.email,
-          fullname: values.fullname,
-          password: values.password,
-          other_name: values.other_name || null,
-          gender: values.gender,
-          phone: values.phone || null,
-          birth_date: values.birth_date
-            ? dayjs(values.birth_date).toISOString()
-            : null,
-          life_status: values.life_status,
-          year_of_death: values.year_of_death
-            ? dayjs(values.year_of_death).toISOString()
-            : null,
-          burial_place: values.burial_place || null,
-          age: age,
-          address: values.address || null,
-          biography: values.biography || null,
+          user_id: values.user_id,
+          father_id: values.father_id,
         };
         await createMutation.mutateAsync(payload);
       }
@@ -148,14 +137,6 @@ export function FamilyMembersFormModal({
       const values = familyMembersToFormValues(familyMembers.items);
       form.setFieldsValue({
         ...values,
-        roles: values.roles.map((i: RoleDTO) => ({
-          label: i.name,
-          value: i.id,
-        })),
-        birth_date: values.birth_date ? dayjs(values.birth_date) : null,
-        year_of_death: values.year_of_death
-          ? dayjs(values.year_of_death)
-          : null,
       });
 
       form.validateFields({ validateOnly: false }).catch(() => {});
@@ -167,7 +148,7 @@ export function FamilyMembersFormModal({
 
   return (
     <Modal
-      title={isEdit ? "Chỉnh sửa người dùng" : "Thêm người dùng"}
+      title={isEdit ? "Chỉnh sửa phả hệ" : "Thêm phả hệ"}
       open={open}
       onCancel={onClose}
       onOk={handleSubmit}
@@ -180,99 +161,27 @@ export function FamilyMembersFormModal({
       <Spin spinning={isEdit && loadingDetail}>
         <Form layout="vertical" style={{ marginTop: 16 }} form={form}>
           <Form.Item
-            name="email"
-            label="Email"
+            name="user_id"
+            label="Tên người vào phả hệ"
             rules={[
-              {
-                required: true,
-                type: "email",
-                message: "Vui lòng nhập đúng định dạng email",
-              },
+              { required: true, message: "Vui lòng chọn người vào phả hệ" },
             ]}
           >
-            <Input placeholder="duong@example.com" disabled={isEdit} />
+            <Select
+              allowClear
+              loading={isLoadingUser}
+              variant="filled"
+              options={
+                users?.items?.map((user: any) => ({
+                  key: user.id,
+                  value: user.id,
+                  label: user.fullname,
+                })) || []
+              }
+              disabled={isEdit}
+            />
           </Form.Item>
 
-          <Form.Item name="password" label="Mật khẩu" initialValue={"1234567"}>
-            <Input placeholder="1234567" disabled={true} />
-          </Form.Item>
-
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: 12,
-            }}
-          >
-            <Form.Item
-              name="fullname"
-              label="Họ và tên"
-              rules={[{ required: true, message: "Vui lòng nhập họ và tên" }]}
-            >
-              <Input placeholder="Nguyen Duong" />
-            </Form.Item>
-            <Form.Item name="other_name" label="Tên khác">
-              <Input placeholder="Duong Nguyen" />
-            </Form.Item>
-          </div>
-
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: 12,
-            }}
-          >
-            <Form.Item name="gender" label="Giới tính">
-              <Select options={GENDER_OPTIONS} />
-            </Form.Item>
-
-            <Form.Item
-              name="phone"
-              label="Số điện thoại"
-              rules={[
-                {
-                  required: true,
-                  pattern: /^0[0-9]{9}$/,
-                  message: "Số điện thoại không hợp lệ",
-                },
-              ]}
-            >
-              <Input placeholder="0909090909" />
-            </Form.Item>
-          </div>
-
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr 1fr",
-              gap: 12,
-            }}
-          >
-            <Form.Item
-              name="birth_date"
-              label="Ngày sinh"
-              rules={[{ required: false }]}
-            >
-              <DatePicker style={{ width: "100%" }} format="DD/MM/YYYY" />
-            </Form.Item>
-
-            <Form.Item name="life_status" label="Tình trạng">
-              <Select options={STATUS_OPTIONS} />
-            </Form.Item>
-
-            {currentStatus == 0 && (
-              <>
-                <Form.Item name="year_of_death" label="Thời điểm mất">
-                  <DatePicker style={{ width: "100%" }} format="DD/MM/YYYY" />
-                </Form.Item>
-
-                <Form.Item name="burial_place" label="Nơi an táng">
-                  <Input placeholder="Nghĩa trang..." />
-                </Form.Item>
-              </>
-            )}
-          </div>
           <div
             style={{
               display: "grid",
@@ -280,31 +189,105 @@ export function FamilyMembersFormModal({
               gap: 12,
             }}
           >
-            <Form.Item name="roles" label="Vai trò">
+            <Form.Item
+              name="father_id"
+              label="Tên người cha/mẹ"
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng chọn người cha/mẹ vào phả hệ",
+                },
+              ]}
+            >
               <Select
-                mode="multiple"
                 allowClear
-                placeholder="Vai trò"
-                loading={isLoadingRoles}
+                loading={isLoadingUser}
                 variant="filled"
                 options={
-                  roles?.items?.map((role: any) => ({
-                    key: role.id,
-                    value: role.id,
-                    label: role.name,
+                  users?.items?.map((user: any) => ({
+                    key: user.id,
+                    value: user.id,
+                    label: user.fullname,
                   })) || []
                 }
+                disabled={isEdit}
               />
             </Form.Item>
           </div>
 
-          <Form.Item name="address" label="Địa chỉ sống">
-            <Input placeholder="123 Đường ABC, Quận XYZ, TP. HCM" />
-          </Form.Item>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr 1fr 1fr",
+              gap: 12,
+            }}
+          >
+            <Form.Item
+              name="marriage_status"
+              label="Tình trạng hôn nhân"
+              rules={[
+                {
+                  required: true,
+                  message: "Vui lòng chọn tình trạng hôn nhân",
+                },
+              ]}
+            >
+              <Select options={STATUS_MARRIE_OPTIONS} />
+            </Form.Item>
 
-          <Form.Item name="biography" label="Tiểu sử">
-            <Input.TextArea rows={3} placeholder="Thông tin tiểu sử..." />
-          </Form.Item>
+            {currentMarriedStatus === "MARRIED" && (
+              <Form.Item
+                name="marriage_date"
+                label="Ngày kết hôn"
+                rules={[{ required: false }]}
+              >
+                <DatePicker style={{ width: "100%" }} format="DD/MM/YYYY" />
+              </Form.Item>
+            )}
+            {currentMarriedStatus === "DIVORCED" && (
+              <Form.Item
+                name="divorce_date"
+                label="Ngày ly hôn"
+                rules={[{ required: false }]}
+              >
+                <DatePicker style={{ width: "100%" }} format="DD/MM/YYYY" />
+              </Form.Item>
+            )}
+            {currentMarriedStatus === "DIVORCED" ||
+              (currentMarriedStatus === "MARRIED" && (
+                <Form.Item
+                  name="father_id"
+                  label="Tên người đã kết hôn"
+                  rules={[
+                    {
+                      required: true,
+                      message: "Vui lòng chọn người vào phả hệ",
+                    },
+                  ]}
+                >
+                  <Select
+                    allowClear
+                    loading={isLoadingUser}
+                    variant="filled"
+                    options={
+                      users?.items?.map((user: any) => ({
+                        key: user.id,
+                        value: user.id,
+                        label: user.fullname,
+                      })) || []
+                    }
+                    disabled={isEdit}
+                  />
+                </Form.Item>
+              ))}
+          </div>
+          <div
+            style={{
+              display: "grid",
+              gridTemplateColumns: "1fr",
+              gap: 12,
+            }}
+          ></div>
         </Form>
       </Spin>
     </Modal>

@@ -2,22 +2,8 @@ import { FamilyMembersGender, LifeStatus, Status } from "@/constants/api";
 
 export interface FamilyMembersDTO {
   id: string;
-  email: string;
-  fullname: string;
-  password: string;
-  roleId: string;
-  other_name?: string | null;
-  age?: number | null;
-  gender: FamilyMembersGender;
-  phone?: string | null;
-  birth_date?: Date | null;
-  year_of_death?: Date | null;
-  burial_place?: string | null;
-  address?: string | null;
-  biography?: string | null;
-  life_status: LifeStatus;
-  status: Status;
-  roles: Recod<string, string>[];
+  user_id: string;
+  father_id: string;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -28,27 +14,13 @@ export interface FamilyMembersDetailDTO {
 export interface FamilyMembersSearchRecordDTO {
   records: {
     items: FamilyMembersDTO[] | null;
-    // total: number;
-    // page: number;
-    // limit: number;
     totalRecord: number;
   };
 }
 
 export interface CreateFamilyMembersDTO {
-  email?: string | null;
-  fullname?: string;
-  password: string;
-  other_name?: string | null;
-  gender: FamilyMembersGender;
-  phone?: string | null;
-  birth_date?: Date | string | null;
-  year_of_death?: Date | string | null;
-  burial_place?: string | null;
-  age: number | null;
-  address?: string | null;
-  biography?: string | null;
-  life_status: LifeStatus;
+  user_id: string;
+  father_id: string;
 }
 
 export interface UpdateFamilyMembersDTO {
@@ -80,19 +52,6 @@ export interface FamilyMembersSearchParams {
 }
 
 export interface FamilyMembersFormValues {
-  email?: string | null;
-  fullname?: string;
-  password: string | null;
-  other_name?: string | null;
-  age?: number | null;
-  gender: FamilyMembersGender;
-  phone?: string | null;
-  birth_date?: Date | null;
-  year_of_death?: Date | null;
-  burial_place?: string | null;
-  address?: string | null;
-  biography?: string | null;
-  status?: Status;
-  life_status: LifeStatus;
-  roles: Recod<string, string>[];
+  user_id: string;
+  father_id: string;
 }
