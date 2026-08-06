@@ -25,6 +25,9 @@ export default function DashboardShell() {
             onOpenKeysChange={nav.setOpenKeys}
             currentView={nav.currentView}
             onMenuSelect={nav.handleMenuSelect}
+            isMobile={nav.isMobile}
+            mobileNavOpen={nav.mobileNavOpen}
+            onMobileNavOpenChange={nav.setMobileNavOpen}
           />
 
           <Layout
@@ -32,9 +35,16 @@ export default function DashboardShell() {
               marginLeft: nav.siderWidth,
               transition: "margin-left 0.2s",
               minHeight: "100vh",
+              // The fixed Sider is out of flow, so the wrapper must not try to
+              // be wider than what's left of the viewport.
+              maxWidth: `calc(100% - ${nav.siderWidth}px)`,
             }}
           >
-            <DashboardHeader meta={nav.meta} />
+            <DashboardHeader
+              meta={nav.meta}
+              isMobile={nav.isMobile}
+              onOpenMobileNav={() => nav.setMobileNavOpen(true)}
+            />
 
             <Content
               style={{

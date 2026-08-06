@@ -54,6 +54,24 @@ export function GlobalStyles() {
         font-weight: 700 !important;
         font-size: 12px !important;
       }
+
+      /* Mobile safety net: the shell hands the full viewport width to the
+         content below lg, so wide tables must scroll inside their own
+         container instead of stretching the whole document. */
+      @media (max-width: 991px) {
+        html, body { overflow-x: hidden; }
+        .ant-table-wrapper,
+        .ant-table-content,
+        .ant-table-body {
+          max-width: 100%;
+          overflow-x: auto !important;
+          -webkit-overflow-scrolling: touch;
+        }
+        .ant-table-wrapper table { min-width: 640px; }
+        .ant-tabs-nav-wrap { overflow-x: auto; }
+        .ant-modal { max-width: calc(100vw - 24px); margin: 8px auto; }
+        .ant-picker-dropdown, .ant-dropdown { max-width: 100vw; }
+      }
     `}</style>
   );
 }
