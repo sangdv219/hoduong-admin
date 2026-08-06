@@ -8,6 +8,7 @@ import {
 import { useUsers } from "@/hooks/use-user";
 import {
   useCreateFamilyMembers,
+  useFamilyMembers,
   useUpdateFamilyMembers,
 } from "@/hooks/use-family-members";
 import { useFamilyMembersDetail } from "@/hooks/use-family-members";
@@ -63,12 +64,34 @@ export function FamilyMembersFormModal({
   const { data: familyMembers, isLoading: loadingDetail } =
     useFamilyMembersDetail(open && familyMembersId ? familyMembersId : null);
   const { data: users, isLoading: isLoadingUser } = useUsers({});
+  const { data: familyMembersList } = useFamilyMembers({});
   const isFormValid = useFormValid(form, open, loadingDetail);
   const createMutation = useCreateFamilyMembers();
   const updateMutation = useUpdateFamilyMembers();
   const submitting = createMutation.isPending || updateMutation.isPending;
 
-  console.log("currentMarriedStatus", currentMarriedStatus);
+  const existingUserIds = new Set(
+    familyMembersList?.items?.map(
+      (member: any) => member.user_id || member.id,
+    ) || [],
+  );
+
+  const userOptions =
+    ((users && users?.items) || [])
+      .filter((user: any) => {
+        // Nếu đang Edit, vẫn cho phép hiển thị user_id hiện tại của bản ghi này
+        if (isEdit && user.id === form.getFieldValue("user_id")) {
+          return true;
+        }
+        // Lọc bỏ những user đã có trong phả hệ
+        return !existingUserIds.has(user.id);
+      })
+      ?.map((user: any) => ({
+        key: user.id,
+        value: user.id,
+        label: user.fullname,
+      })) || [];
+
   async function handleSubmit() {
     try {
       const values = await form.validateFields();
@@ -171,13 +194,7 @@ export function FamilyMembersFormModal({
               allowClear
               loading={isLoadingUser}
               variant="filled"
-              options={
-                users?.items?.map((user: any) => ({
-                  key: user.id,
-                  value: user.id,
-                  label: user.fullname,
-                })) || []
-              }
+              options={userOptions}
               disabled={isEdit}
             />
           </Form.Item>
@@ -225,12 +242,7 @@ export function FamilyMembersFormModal({
             <Form.Item
               name="marriage_status"
               label="Tình trạng hôn nhân"
-              rules={[
-                {
-                  required: true,
-                  message: "Vui lòng chọn tình trạng hôn nhân",
-                },
-              ]}
+              rules={[{ required: false }]}
             >
               <Select options={STATUS_MARRIE_OPTIONS} />
             </Form.Item>

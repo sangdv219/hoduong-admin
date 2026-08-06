@@ -29,6 +29,7 @@ export const STATUS_OPTIONS = [
 ];
 
 export const STATUS_MARRIE_OPTIONS = [
+  { value: "SINGLE", label: "Độc thân" },
   { value: "MARRIED", label: "Đã kết hôn" },
   { value: "DIVORCED", label: "Đã ly hôn" },
   { value: "WIDOWED", label: "Goá phụ" },

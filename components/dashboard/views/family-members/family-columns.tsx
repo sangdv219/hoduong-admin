@@ -18,6 +18,7 @@ interface FamilyMemberColumnHandlers {
 }
 
 const Status = {
+  SINGLE: "SINGLE",
   MARRIED: "MARRIED",
   DIVORCED: "DIVORCED",
   WIDOWED: "WIDOWED",
@@ -29,6 +30,7 @@ const MERRIED_STATUS_CONFIG: Record<
   MarriedStatusType,
   { label: string; color: string }
 > = {
+  [Status.SINGLE]: { label: "Độc thân", color: "#16a34a" },
   [Status.MARRIED]: { label: "Đã kết hôn", color: "#16a34a" },
   [Status.DIVORCED]: { label: "Đã ly hôn", color: "#dc2626" },
   [Status.WIDOWED]: { label: "Goá phụ", color: "#f59e0b" },
@@ -151,7 +153,9 @@ export function getFamilyMemberColumns(
       width: 200,
       render: (
         wife: {
-          info: { marriage_status: "MARRIED" | "DIVORCED" | "WIDOWED" };
+          info: {
+            marriage_status: "SINGLE" | "MARRIED" | "DIVORCED" | "WIDOWED";
+          };
         }[],
       ) => (
         <Space size={[0, 4]} wrap>
