@@ -88,7 +88,12 @@ function SidebarContent({
             }}
           >
             <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
-              <path d="M3 5h14M3 10h14M3 15h9" stroke="white" strokeWidth="2" strokeLinecap="round" />
+              <path
+                d="M3 5h14M3 10h14M3 15h9"
+                stroke="white"
+                strokeWidth="2"
+                strokeLinecap="round"
+              />
               <circle cx="17" cy="15" r="2.5" fill="#7fffc4" />
             </svg>
           </div>
@@ -138,8 +143,12 @@ function SidebarContent({
                   flexShrink: 0,
                   transition: "color 0.15s",
                 }}
-                onMouseEnter={(e) => (e.currentTarget.style.color = SIDEBAR_TEXT)}
-                onMouseLeave={(e) => (e.currentTarget.style.color = SIDEBAR_TEXT_DIM)}
+                onMouseEnter={(e) =>
+                  (e.currentTarget.style.color = SIDEBAR_TEXT)
+                }
+                onMouseLeave={(e) =>
+                  (e.currentTarget.style.color = SIDEBAR_TEXT_DIM)
+                }
               >
                 <MenuFoldOutlined style={{ fontSize: 13 }} />
               </button>
@@ -170,7 +179,11 @@ function SidebarContent({
 
         {!collapsed && (
           <Input
-            prefix={<SearchOutlined style={{ color: SIDEBAR_TEXT_DIM, fontSize: 12 }} />}
+            prefix={
+              <SearchOutlined
+                style={{ color: SIDEBAR_TEXT_DIM, fontSize: 12 }}
+              />
+            }
             placeholder="Tìm kiếm..."
             size="small"
             style={{
@@ -208,7 +221,9 @@ function SidebarContent({
                 width: "100%",
               }}
               onMouseEnter={(e) => (e.currentTarget.style.color = SIDEBAR_TEXT)}
-              onMouseLeave={(e) => (e.currentTarget.style.color = SIDEBAR_TEXT_DIM)}
+              onMouseLeave={(e) =>
+                (e.currentTarget.style.color = SIDEBAR_TEXT_DIM)
+              }
             >
               <MenuUnfoldOutlined style={{ fontSize: 14 }} />
             </button>
@@ -265,7 +280,9 @@ function SidebarContent({
           }}
         />
         {!collapsed && (
-          <span style={{ color: SIDEBAR_TEXT_DIM, fontSize: 11 }}>Version v1.10.1</span>
+          <span style={{ color: SIDEBAR_TEXT_DIM, fontSize: 11 }}>
+            Version v1.10.1
+          </span>
         )}
       </div>
     </div>
@@ -305,7 +322,7 @@ export function Sidebar({
         open={mobileNavOpen}
         onClose={() => onMobileNavOpenChange(false)}
         closable={false}
-        width={272}
+        size="default"
         styles={{
           body: { padding: 0, background: SIDEBAR_BG, overflow: "hidden" },
           header: { display: "none" },
