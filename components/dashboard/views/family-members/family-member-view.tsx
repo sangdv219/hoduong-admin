@@ -41,7 +41,7 @@ import { getFamilyMemberColumns } from "./family-columns";
 import { useFamilyMembers } from "@/hooks/use-family-members";
 import { useFamilyMembersFilterStore } from "@/stores/use-family-members-filter-store";
 import { FamilyMembersFormModal } from "./family-members-form-modal";
-import { FamilyMembersSearchRecordDTO } from "@/types/family-members";
+import { IFamilyMembersSearchRecordDTO } from "@/types/family-members";
 
 export function FamilyMemberView() {
   const [selectedRowKeys, setSelectedRowKeys] = useState<React.Key[]>([]);
@@ -241,7 +241,7 @@ export function FamilyMemberView() {
     setRoleId(value === undefined ? undefined : value);
   };
 
-  const handleTableChange: TableProps<FamilyMembersSearchRecordDTO>["onChange"] =
+  const handleTableChange: TableProps<IFamilyMembersSearchRecordDTO>["onChange"] =
     (pagination, filters, sorter) => {
       if (pagination.pageSize && pagination.pageSize !== limit) {
         setLimit(pagination.pageSize);
@@ -490,9 +490,11 @@ export function FamilyMemberView() {
               }}
               onChange={handleTableChange}
               columns={
-                columns as unknown as TableColumnsType<FamilyMembersSearchRecordDTO>
+                columns as unknown as TableColumnsType<IFamilyMembersSearchRecordDTO>
               }
-              dataSource={data?.items ?? ([] as FamilyMembersSearchRecordDTO[])}
+              dataSource={
+                data?.items ?? ([] as IFamilyMembersSearchRecordDTO[])
+              }
               loading={isLoading}
               pagination={{
                 current: page,

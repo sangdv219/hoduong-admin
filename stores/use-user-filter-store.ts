@@ -10,7 +10,7 @@ interface UserFilterState {
   roleId?: string;
   setKeyword: (search: string) => void;
   setPage: (page: number) => void;
-  setLimit: (page: number) => void;
+  setLimit: (limit: number) => void;
   reset: () => void;
   setStatus: (status?: "suspended" | "pending" | "inactive" | "active") => void;
   setGender: (gender?: number) => void;

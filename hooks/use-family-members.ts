@@ -3,8 +3,8 @@ import { ApiError } from "@/lib/api-errors";
 import { familyMembersService } from "@/services/family-members.service";
 import { useFamilyMembersFilterStore } from "@/stores/use-family-members-filter-store";
 import {
-  CreateFamilyMembersDTO,
-  UpdateFamilyMembersDTO,
+  ICreateFamilyMembersDTO,
+  IUpdateFamilyMembersDTO,
 } from "@/types/family-members";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { App } from "antd";
@@ -64,7 +64,7 @@ export function useCreateFamilyMembers() {
   const { message } = App.useApp();
 
   return useMutation({
-    mutationFn: (payload: CreateFamilyMembersDTO) =>
+    mutationFn: (payload: ICreateFamilyMembersDTO) =>
       familyMembersService.create(payload),
     onSuccess: () => {
       message.success("Thêm thành viên gia đình thành công");
@@ -87,7 +87,7 @@ export function useUpdateFamilyMembers() {
       payload,
     }: {
       id: string;
-      payload: UpdateFamilyMembersDTO;
+      payload: IUpdateFamilyMembersDTO;
     }) => familyMembersService.update(id, payload),
     onSuccess: (_, { id }) => {
       message.success("Cập nhật thành viên gia đình thành công");

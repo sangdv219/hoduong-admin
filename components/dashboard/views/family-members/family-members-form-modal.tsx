@@ -20,9 +20,10 @@ import { DatePicker, Form, Input, Modal, Select, Spin } from "antd";
 import dayjs from "dayjs";
 import { useEffect, useState } from "react";
 import {
-  CreateFamilyMembersDTO,
-  UpdateFamilyMembersDTO,
+  ICreateFamilyMembersDTO,
+  IUpdateFamilyMembersDTO,
 } from "@/types/family-members";
+import { useCouples } from "@/hooks/use-couple";
 
 interface FamilyMembersFormModalProps {
   open: boolean;
@@ -64,6 +65,7 @@ export function FamilyMembersFormModal({
   const { data: familyMembers, isLoading: loadingDetail } =
     useFamilyMembersDetail(open && familyMembersId ? familyMembersId : null);
   const { data: users, isLoading: isLoadingUser } = useUsers({});
+  const { data: couples, isLoading: isLoadingCouple } = useCouples({});
   const { data: familyMembersList } = useFamilyMembers({});
   const isFormValid = useFormValid(form, open, loadingDetail);
   const createMutation = useCreateFamilyMembers();
@@ -75,6 +77,17 @@ export function FamilyMembersFormModal({
       (member: any) => member.user_id || member.id,
     ) || [],
   );
+
+  console.log("couples", couples);
+
+  const formatCoupleOption = (response: any) => {
+    if (!response || !Array.isArray(response.items)) return [];
+
+    return response.items.map((item: any) => ({
+      label: `${item?.partner_2?.user?.fullname || ""} - ${item?.partner_1?.user?.fullname || ""}`,
+      value: item?.id || "",
+    }));
+  };
 
   const userOptions =
     ((users && users?.items) || [])
@@ -113,7 +126,7 @@ export function FamilyMembersFormModal({
         age = calculatedAge < 0 ? 0 : calculatedAge;
       }
       if (isEdit && familyMembersId) {
-        const payload: UpdateFamilyMembersDTO = {
+        const payload: IUpdateFamilyMembersDTO = {
           fullname: values.fullname,
           other_name: values.other_name,
           gender: values.gender,
@@ -138,9 +151,9 @@ export function FamilyMembersFormModal({
 
         await updateMutation.mutateAsync({ id: familyMembersId, payload });
       } else {
-        const payload: CreateFamilyMembersDTO = {
+        const payload: ICreateFamilyMembersDTO = {
           user_id: values.user_id,
-          father_id: values.father_id,
+          parent_couple_id: values.parent_couple_id,
         };
         await createMutation.mutateAsync(payload);
       }
@@ -199,38 +212,41 @@ export function FamilyMembersFormModal({
             />
           </Form.Item>
 
-          <div
-            style={{
-              display: "grid",
-              gridTemplateColumns: "1fr",
-              gap: 12,
-            }}
-          >
-            <Form.Item
-              name="father_id"
-              label="Tên người cha/mẹ"
-              rules={[
-                {
-                  required: true,
-                  message: "Vui lòng chọn người cha/mẹ vào phả hệ",
-                },
-              ]}
+          {Boolean(couples?.items?.length) && (
+            <div
+              style={{
+                display: "grid",
+                gridTemplateColumns: "1fr",
+                gap: 12,
+              }}
             >
-              <Select
-                allowClear
-                loading={isLoadingUser}
-                variant="filled"
-                options={
-                  users?.items?.map((user: any) => ({
-                    key: user.id,
-                    value: user.id,
-                    label: user.fullname,
-                  })) || []
-                }
-                disabled={isEdit}
-              />
-            </Form.Item>
-          </div>
+              <Form.Item
+                name="parent_couple_id"
+                label="Huyết thống"
+                rules={[
+                  {
+                    required: Boolean(couples?.items?.length),
+                    message: "Vui lòng chọn người huyết thống",
+                  },
+                ]}
+              >
+                <Select
+                  allowClear
+                  loading={isLoadingCouple}
+                  variant="filled"
+                  options={formatCoupleOption(couples)}
+                  // options={
+                  //   couples?.items?.map((user: any) => ({
+                  //     key: user.id,
+                  //     value: user.id,
+                  //     label: user.fullname,
+                  //   })) || []
+                  // }
+                  disabled={isEdit}
+                />
+              </Form.Item>
+            </div>
+          )}
 
           <div
             style={{
@@ -268,7 +284,7 @@ export function FamilyMembersFormModal({
             {currentMarriedStatus === "DIVORCED" ||
               (currentMarriedStatus === "MARRIED" && (
                 <Form.Item
-                  name="father_id"
+                  name="parent_couple_id"
                   label="Tên người đã kết hôn"
                   rules={[
                     {

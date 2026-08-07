@@ -1,6 +1,6 @@
 "use client";
 
-import { FamilyMembersDTO } from "@/types/family-members";
+import { IFamilyMembersDTO } from "@/types/family-members";
 import { IUser } from "@/types/user";
 import { DeleteOutlined, FormOutlined } from "@ant-design/icons";
 import type { TableColumnsType } from "antd";
@@ -48,7 +48,7 @@ export function getFamilyMemberColumns(
   handlers: FamilyMemberColumnHandlers,
   sortField?: string,
   sortOrder?: "ASC" | "DESC",
-): TableColumnsType<FamilyMembersDTO> {
+): TableColumnsType<IFamilyMembersDTO> {
   return [
     {
       title: "",

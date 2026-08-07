@@ -1,17 +1,17 @@
 import {
-  FamilyMembersDTO,
-  FamilyMembersFormValues,
+  IFamilyMembersDTO,
+  IFamilyMembersFormValues,
 } from "@/types/family-members";
 
 export const formFamilyMembersDefault = {
   user_id: "",
-  father_id: "",
+  parent_couple_id: "",
 };
 export function familyMembersToFormValues(
-  familyMembers: FamilyMembersDTO,
-): FamilyMembersFormValues {
+  familyMembers: IFamilyMembersDTO,
+): IFamilyMembersFormValues {
   return {
     user_id: familyMembers.user_id,
-    father_id: familyMembers.father_id,
+    parent_couple_id: familyMembers.parent_couple_id,
   };
 }

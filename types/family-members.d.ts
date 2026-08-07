@@ -1,29 +1,29 @@
 import { FamilyMembersGender, LifeStatus, Status } from "@/constants/api";
 
-export interface FamilyMembersDTO {
+export interface IFamilyMembersDTO {
   id: string;
   user_id: string;
-  father_id: string;
+  parent_couple_id: string;
   createdAt?: string;
   updatedAt?: string;
 }
-export interface FamilyMembersDetailDTO {
-  items: FamilyMembersDTO;
+export interface IFamilyMembersDetailDTO {
+  items: IFamilyMembersDTO;
 }
 
-export interface FamilyMembersSearchRecordDTO {
+export interface IFamilyMembersSearchRecordDTO {
   records: {
-    items: FamilyMembersDTO[] | null;
+    items: IFamilyMembersDTO[] | null;
     totalRecord: number;
   };
 }
 
-export interface CreateFamilyMembersDTO {
+export interface ICreateFamilyMembersDTO {
   user_id: string;
-  father_id: string;
+  parent_couple_id: string;
 }
 
-export interface UpdateFamilyMembersDTO {
+export interface IUpdateFamilyMembersDTO {
   fullname: string;
   other_name: string | null;
   gender: FamilyMembersGender;
@@ -38,7 +38,7 @@ export interface UpdateFamilyMembersDTO {
   roles: string[];
 }
 
-export interface FamilyMembersSearchParams {
+export interface IFamilyMembersSearchParams {
   keyword?: string;
   q?: string;
   page?: number;
@@ -51,7 +51,7 @@ export interface FamilyMembersSearchParams {
   role_id?: string;
 }
 
-export interface FamilyMembersFormValues {
+export interface IFamilyMembersFormValues {
   user_id: string;
-  father_id: string;
+  parent_couple_id: string;
 }

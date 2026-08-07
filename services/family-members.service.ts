@@ -1,15 +1,15 @@
 import { apiClient } from "@/lib/api-client";
 import { PaginatedResponse } from "@/types/common";
 import {
-  CreateFamilyMembersDTO,
-  FamilyMembersDetailDTO,
-  FamilyMembersDTO,
-  FamilyMembersSearchParams,
-  FamilyMembersSearchRecordDTO,
-  UpdateFamilyMembersDTO,
+  ICreateFamilyMembersDTO,
+  IFamilyMembersDetailDTO,
+  IFamilyMembersDTO,
+  IFamilyMembersSearchParams,
+  IFamilyMembersSearchRecordDTO,
+  IUpdateFamilyMembersDTO,
 } from "@/types/family-members";
 
-function buildSearchQuery(params: FamilyMembersSearchParams): string {
+function buildSearchQuery(params: IFamilyMembersSearchParams): string {
   const query = new URLSearchParams();
   if (params.keyword !== undefined)
     query.set("keyword", String(params.keyword));
@@ -29,32 +29,32 @@ function buildSearchQuery(params: FamilyMembersSearchParams): string {
   return qs ? `?${qs}` : "";
 }
 export const familyMembersService = {
-  search(params: FamilyMembersSearchParams) {
-    return apiClient<PaginatedResponse<FamilyMembersSearchRecordDTO>>(
+  search(params: IFamilyMembersSearchParams) {
+    return apiClient<PaginatedResponse<IFamilyMembersSearchRecordDTO>>(
       `/family-members${buildSearchQuery(params)}`,
     );
   },
 
   getById(id: string) {
-    return apiClient<FamilyMembersDetailDTO>(`/family-members/${id}`);
+    return apiClient<IFamilyMembersDetailDTO>(`/family-members/${id}`);
   },
 
-  create(payload: CreateFamilyMembersDTO) {
-    return apiClient<FamilyMembersDTO>("/family-members", {
+  create(payload: ICreateFamilyMembersDTO) {
+    return apiClient<IFamilyMembersDTO>("/family-members", {
       method: "POST",
       body: payload,
     });
   },
 
-  update(id: string, payload: UpdateFamilyMembersDTO) {
-    return apiClient<FamilyMembersDTO>(`/family-members/${id}`, {
+  update(id: string, payload: IUpdateFamilyMembersDTO) {
+    return apiClient<IFamilyMembersDTO>(`/family-members/${id}`, {
       method: "PATCH",
       body: payload,
     });
   },
 
   changeLifeStatus(id: string, payload: string) {
-    return apiClient<FamilyMembersDTO>(
+    return apiClient<IFamilyMembersDTO>(
       `/family-members/changeFamilyMembersStatus/${id}`,
       {
         method: "PATCH",
